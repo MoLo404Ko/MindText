@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+
+        android:background="@color/white"
+
+        android:elevation="4dp"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/backArrowBtn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+
+            android:background="@drawable/ic_arrow"
+            android:layout_marginLeft="20dp"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+        </androidx.appcompat.widget.AppCompatImageButton>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/titlePage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+        </androidx.appcompat.widget.AppCompatTextView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/message_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+
+        app:layout_constraintTop_toBottomOf="@id/toolBar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+    </androidx.fragment.app.FragmentContainerView>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/btn_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintBottom_toTopOf="@+id/bottom_layout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="10dp">
+
+    </androidx.fragment.app.FragmentContainerView>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="40dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <EditText
+            android:id="@+id/inputField"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="4"
+
+            android:fontFamily="@font/sfprotext_regular"
+            android:textSize="16sp"
+
+            android:hint="@string/input_text"
+            android:gravity="left | center"
+            android:inputType="textMultiLine"
+
+            android:background="@drawable/shape_input_field_blocked"
+            android:paddingLeft="10dp">
+        </EditText>
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/sendMessage"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_send"
+            android:layout_gravity="right | center"
+
+            android:backgroundTint="@color/white">
+        </androidx.appcompat.widget.AppCompatImageButton>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.constraintlayout.widget.ConstraintLayout>

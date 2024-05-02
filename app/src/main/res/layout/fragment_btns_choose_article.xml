@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:id="@+id/fragment_btns_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/shape_stroke_rectangle"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:paddingLeft="10dp">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="@string/choose_article"
+        android:layout_marginTop="15dp"
+
+        style="@style/H1_text">
+    </androidx.appcompat.widget.AppCompatTextView>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="@string/under_generate">
+    </androidx.appcompat.widget.AppCompatTextView>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/animalBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+
+            android:background="@drawable/shape_stroke_btn"
+            android:text="@string/animal_article"
+
+            style="@style/btn_text">
+        </androidx.appcompat.widget.AppCompatButton>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/peopleBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+
+            android:background="@drawable/shape_stroke_btn"
+            android:layout_marginLeft="5dp"
+
+            android:text="@string/people_article"
+            style="@style/btn_text">
+        </androidx.appcompat.widget.AppCompatButton>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/technologyBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+
+            android:background="@drawable/shape_stroke_btn"
+            android:layout_marginLeft="5dp"
+
+            android:text="@string/technology_article"
+            style="@style/btn_text">
+        </androidx.appcompat.widget.AppCompatButton>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/funHistoryBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+
+            android:background="@drawable/shape_stroke_btn"
+            android:text="@string/fun_history"
+
+            style="@style/btn_text">
+        </androidx.appcompat.widget.AppCompatButton>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/criminalBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+
+            android:background="@drawable/shape_stroke_btn"
+            android:layout_marginLeft="5dp"
+
+            android:text="@string/criminal"
+
+            style="@style/btn_text">
+        </androidx.appcompat.widget.AppCompatButton>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/detectiveBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+
+            android:background="@drawable/shape_stroke_btn"
+            android:text="@string/detective"
+
+            style="@style/btn_text">
+        </androidx.appcompat.widget.AppCompatButton>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>
+

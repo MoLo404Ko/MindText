@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:id="@+id/fragment_btns_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/shape_stroke_rectangle"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:paddingLeft="10dp">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="@string/translate_choose_language"
+        android:layout_marginTop="15dp"
+
+        style="@style/H1_text">
+    </androidx.appcompat.widget.AppCompatTextView>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginRight="20dp"
+
+        android:text="@string/under_translate_choose_language">
+    </androidx.appcompat.widget.AppCompatTextView>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/russian_language"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+
+            android:text="@string/russian_language"
+            android:background="@drawable/shape_stroke_btn"
+
+            style="@style/btn_text">
+        </androidx.appcompat.widget.AppCompatButton>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/english_language"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+
+            android:text="@string/english_language"
+            android:background="@drawable/shape_stroke_btn"
+
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="15dp"
+
+            style="@style/btn_text">
+        </androidx.appcompat.widget.AppCompatButton>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>
+

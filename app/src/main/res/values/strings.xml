@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">MindText</string>
+
+    <string name="input_text">Введите текст</string>
+    <string name="request_processing">Запрос обрабатывается</string>
+
+    <string name="fast_choose">Выбор ИИ</string>
+    <string name="under_fast_choose">Нажмите на кнопку, чтобы выбрать задачу</string>
+    <string name="generate_text">Генерация текста</string>
+    <string name="ton_text">Тональность текста</string>
+    <string name="emotional_text">Эмоциональность текста</string>
+    <string name="find_objects_text">Найти сущности</string>
+
+    <string name="start_msg">Давайте начнем, выберите функционал!</string>
+    <string name="start_translate">Приступим! Выберите язык, с которого нужно перевести или отправьте текст</string>
+
+    <string name="translate_text">Перевод текста</string>
+    <string name="translate_choose_language">Выбор языка</string>
+    <string name="under_translate_choose_language">Выберите язык, на который Вам нужно перевести</string>
+    <string name="russian_language">Русский язык</string>
+    <string name="english_language">Английский язык</string>
+    <string name="chosen_language">Язык выбран! Введите текст или загрузите файл</string>
+    <string name="text_for_translate">Текст для перевода</string>
+    <string name="under_text_for_translate">Вставьте текст или загрузите файл для перевода</string>
+    <string name="back_action">Вернуться обратно</string>
+    <string name="done">Готово!</string>
+    <string name="download_text">Скачать текст на устройство</string>
+    
+    <string name="main">Главная</string>
+    <string name="transTX">TransTX</string>
+    <string name="genTX">GenTX</string>
+
+    <string name="choose_article">Выберите тему</string>
+    <string name="under_generate">Выберите на какие темы будет сгенерирован текст или напишите свою</string>
+    <string name="animal_article">Животные</string>
+    <string name="people_article">Люди</string>
+    <string name="technology_article">Технологии</string>
+    <string name="fun_history">Смешные истории</string>
+    <string name="criminal">Криминал</string>
+    <string name="detective">Детектив</string>
+
+    <string name="choose_length_text">Выберите длину текста</string>
+    <string name="under_length">Выберите сколько предложений должно быть в тексте</string>
+    <string name="less_10">До 10</string>
+    <string name="less_25">До 25</string>
+    <string name="less_50">До 50</string>
+
+    <string name="key_words">Ключевые слова</string>
+    <string name="under_key_words">Введите ключевые слова которые должны быть в тексте. В качестве разделителя используйте пробел</string>
+
+    <string name="generate_text_msg">Генерация текста</string>
+    <string name="start_generate_msg">Приступим, выберите тему или напишите свою</string>
+    <string name="choose_length_text_msg">Выберите длину текста</string>
+    <string name="key_words_msg">Теперь введите ключевые слова</string>
+</resources>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:id="@+id/fragment_btns_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/shape_stroke_rectangle"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:paddingLeft="10dp">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="@string/text_for_translate"
+        android:layout_marginTop="15dp"
+
+        style="@style/H1_text">
+    </androidx.appcompat.widget.AppCompatTextView>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginRight="20dp"
+
+        android:text="@string/under_text_for_translate">
+    </androidx.appcompat.widget.AppCompatTextView>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/importBtn"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+
+        android:background="@drawable/ic_import"
+
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="15dp"
+
+        style="@style/btn_text">
+    </androidx.appcompat.widget.AppCompatButton>
+</androidx.appcompat.widget.LinearLayoutCompat>
+

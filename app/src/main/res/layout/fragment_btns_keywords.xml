@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:id="@+id/fragment_btns_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/shape_stroke_rectangle"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="@string/key_words"
+        android:layout_marginTop="15dp"
+
+        style="@style/H1_text">
+    </androidx.appcompat.widget.AppCompatTextView>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="@string/under_key_words"
+        android:layout_marginBottom="12dp">
+    </androidx.appcompat.widget.AppCompatTextView>
+</androidx.appcompat.widget.LinearLayoutCompat>
+
