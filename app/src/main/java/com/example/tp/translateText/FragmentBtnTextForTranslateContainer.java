@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,11 +79,11 @@ public class FragmentBtnTextForTranslateContainer extends ClassWorkingWithNN {
     }
 
     @Override
-    public String requestToServerForTranslateScript(String translateText) throws ExecutionException, InterruptedException {
+    public String requestToServer(String translateText) throws ExecutionException, InterruptedException {
         ExecutorService es = Executors.newSingleThreadExecutor();
 
         Future<String> future = es.submit(new GetAnswerTranslateFromServerTask
-                (Constants.TRANSLATE_SCRIPT_PATH, translateText, this.getArguments().getString(Constants.KEY_LANGUAGE)));
+                (translateText, this.getArguments().getString(Constants.KEY_LANGUAGE)));
 
         es.shutdown();
 
@@ -162,7 +161,7 @@ public class FragmentBtnTextForTranslateContainer extends ClassWorkingWithNN {
             Runnable task = () -> {
                 String answer;
                 try {
-                    answer = clearAnswer(requestToServerForTranslateScript(fileText.toString()));
+                    answer = clearAnswer(requestToServer(fileText.toString()));
                     super.addAnswerOnUIThread(addMessage, answer, new FragmentBtnDownloadText(mActivity), "fragmentBtnDownloadText");
                 } catch (ExecutionException e) {
                     throw new RuntimeException(e);

@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
 
+import com.example.tp.generateText.FragmentBtnKeyWords;
 import com.example.tp.translateText.FragmentBtnTextForTranslateContainer;
 
 import org.json.JSONException;
@@ -40,10 +41,7 @@ public class MainHandler extends Fragment {
                 addMessage.setMessageToContainer(getResources().getString(R.string.request_processing), null, "", false);
 
                 if (tag.equals("fragmentBtnKeyWords")) {
-                    Bundle bundle = fragment.getArguments();
-                    String prompt = "Напишите текст на тему " + bundle.get("Article") + " длиной до " + bundle.getString("Length") +
-                            " предложений с ключевыми словами " + message;
-                    getAnswerFromGigaChat(addMessage, new FragmentBtnDownloadText(mActivity), prompt);
+                    handlerOfSendMessageForGenerate(fragment, message, addMessage, mActivity);
                 }
                 else if (tag.equals("fragmentBtnTextForTranslateContainer")) {
                     handlerOfSendMessageForTranslate(fragment, message, addMessage, mActivity);
@@ -76,26 +74,26 @@ public class MainHandler extends Fragment {
         });
     }
 
-    private void getAnswerFromGigaChat(AddMessage addMessage, Fragment fragment, String prompt) {
-        Runnable task = () -> {
-            String answer;
-            try {
-                answer = GigaChatModelClass.getAnswerFromGigaChat(prompt);
-                Log.d("MyLog", answer);
-                addAnswerOnUIThread(addMessage, answer, fragment, "fragmentBtnDownloadText");
-            } catch (InterruptedException e) {
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(() -> {
-                    addMessage.setMessageToContainer("Отмена запроса", null, "", false);
-                });
-            } catch (JSONException | IOException e) {
-                throw new RuntimeException(e);
-            }
-        };
-
-        Thread getAnswer = new Thread(task, "generateTextThread");
-        getAnswer.start();
-    }
+//    private void getAnswerFromGigaChat(AddMessage addMessage, Fragment fragment, String prompt) {
+//        Runnable task = () -> {
+//            String answer;
+//            try {
+//                answer = GigaChatModelClass.getAnswerFromGigaChat(prompt);
+//                Log.d("MyLog", answer);
+//                addAnswerOnUIThread(addMessage, answer, fragment, "fragmentBtnDownloadText");
+//            } catch (InterruptedException e) {
+//                Handler handler = new Handler(Looper.getMainLooper());
+//                handler.post(() -> {
+//                    addMessage.setMessageToContainer("Отмена запроса", null, "", false);
+//                });
+//            } catch (JSONException | IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        };
+//
+//        Thread getAnswer = new Thread(task, "generateTextThread");
+//        getAnswer.start();
+//    }
 
     /**
      * Handler of sending message from input fields for translate
@@ -110,7 +108,7 @@ public class MainHandler extends Fragment {
             Runnable runnable = () -> {
                 String answer;
                 try {
-                    answer = ((FragmentBtnTextForTranslateContainer)fragment).requestToServerForTranslateScript(message);
+                    answer = ((FragmentBtnTextForTranslateContainer)fragment).requestToServer(message);
                     answer = ((FragmentBtnTextForTranslateContainer) fragment).clearAnswer(answer);
 
                     addAnswerOnUIThread(addMessage, answer, new FragmentBtnDownloadText(mActivity), "fragmentBtnDownloadText");
@@ -124,10 +122,11 @@ public class MainHandler extends Fragment {
                 }
             };
 
-            Thread thread = new Thread(runnable, "generateTextThread");
+            Thread thread = new Thread(runnable, "translateTextThread");
             thread.start();
         }
     }
+
 
     /**
      * Identify the language and equal translate language with identified language
@@ -140,7 +139,6 @@ public class MainHandler extends Fragment {
         String engRegex = "[a-zA-Z]+";
 
         message = message.replaceAll("\\s", "");
-        Log.d("MyLog", message);
 
         if (message.matches(rusRegex)) rusLanguage = true;
         if (message.matches(engRegex)) engLanguage = true;
@@ -157,5 +155,27 @@ public class MainHandler extends Fragment {
             Toast.makeText(getContext(), "Введенный язык и язык перевода совпадают", Toast.LENGTH_SHORT).show();
             return false;
         }
+    }
+    private void handlerOfSendMessageForGenerate(Fragment fragment, String message,
+                                                 AddMessage addMessage, Activity mActivity) {
+        Runnable runnable = () -> {
+            String answer;
+
+            try {
+                answer = ((FragmentBtnKeyWords)fragment).requestToServer(message);
+                answer = ((FragmentBtnKeyWords) fragment).clearAnswer(answer);
+
+                addAnswerOnUIThread(addMessage, answer, new FragmentBtnDownloadText(mActivity), "fragmentBtnDownloadText");
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(() -> {
+                    addMessage.setMessageToContainer("Отмена запроса", null, "", false);
+                });
+            }
+        };
+        Thread thread = new Thread(runnable, "generateTextThread");
+        thread.start();
     }
 }

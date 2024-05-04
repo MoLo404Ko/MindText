@@ -3,6 +3,7 @@ package com.example.tp.generateText;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +18,16 @@ import com.example.tp.FragmentBtnDownloadText;
 import com.example.tp.R;
 import com.example.tp.SetHeightMessageContainer;
 import com.example.tp.*;
+import com.example.tp.server.GetAnswerGenerateFromServerTask;
+import com.example.tp.server.GetAnswerTranslateFromServerTask;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 
-public class FragmentBtnKeyWords extends MainHandler {
+public class FragmentBtnKeyWords extends ClassWorkingWithNN {
     private Activity mActivity;
     private AddMessage addMessage;
     private ControlVisibleEditTextField controlVisibleEditTextField;
@@ -52,5 +58,20 @@ public class FragmentBtnKeyWords extends MainHandler {
     private void init() {
         super.onClickSendMsg(mActivity, addMessage, this, "fragmentBtnKeyWords");
         controlVisibleEditTextField.setVisibility(true);
+    }
+
+    @Override
+    public String requestToServer(String data) throws ExecutionException, InterruptedException {
+        Bundle args = this.getArguments();
+        String promptText = args.getString("Article");
+        promptText += " " + args.getString("Length");
+        promptText += " " + data;
+
+        ExecutorService es = Executors.newSingleThreadExecutor();
+
+        Future<String> future = es.submit(new GetAnswerGenerateFromServerTask(promptText));
+        es.shutdown();
+
+        return future.get();
     }
 }

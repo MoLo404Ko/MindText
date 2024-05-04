@@ -12,18 +12,17 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Callable;
 
-public class GetAnswerTranslateFromServerTask implements Callable<String> {
-    private String translateText;
-    private String language;
 
-    public GetAnswerTranslateFromServerTask(String translateText, String language) {
-        this.translateText = translateText;
-        this.language = language;
+public class GetAnswerGenerateFromServerTask implements Callable<String> {
+    private String promptText;
+
+    public GetAnswerGenerateFromServerTask(String promptText) {
+        this.promptText = promptText;
     }
 
     @Override
     public String call() throws Exception {
-        URL url = new URL(Constants.TRANSLATE_SCRIPT_PATH);
+        URL url = new URL(Constants.GENERATE_SCRIPT_PATH);
 
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
         connection.setRequestMethod("POST");
@@ -31,7 +30,7 @@ public class GetAnswerTranslateFromServerTask implements Callable<String> {
         connection.setChunkedStreamingMode(8096);
         connection.setRequestProperty("Accept", "text/html");
 
-        String postText = "data=" + translateText + "&language=" + language;
+        String postText = "data=" + promptText;
 
         byte[] byteData = postText.getBytes(StandardCharsets.UTF_8);
 
@@ -52,6 +51,7 @@ public class GetAnswerTranslateFromServerTask implements Callable<String> {
         br.close();
         connection.disconnect();
 
+        Log.d("MyLog", response.toString());
         return response.toString();
     }
 }

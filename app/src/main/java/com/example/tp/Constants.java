@@ -6,6 +6,7 @@ public class Constants {
     public static final String KEY_TEXT = "TextKey";
     public static final String KEY_LANGUAGE = "LanguageKey";
     public static final String TRANSLATE_SCRIPT_PATH = "https://practicenn.ru/translate.php";
+    public static final String GENERATE_SCRIPT_PATH = "https://practicenn.ru/generate.php";
 
     /**
      * Документация для получения токена

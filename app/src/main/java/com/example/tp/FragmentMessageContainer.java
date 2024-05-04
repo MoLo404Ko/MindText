@@ -31,7 +31,6 @@ public class FragmentMessageContainer extends Fragment {
     private ConstraintLayout rootMessageLayout = null;
     private List<String> messages = new ArrayList<>();
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,12 +46,17 @@ public class FragmentMessageContainer extends Fragment {
         return view;
     }
 
+
+    /**
+     * Add new message to block
+     * @param text_msg - message
+     * @param user - message from user or AI
+     */
     public void addMessage(String text_msg, boolean user) {
-        if (mainMessageLayout.getChildCount() == 20) {
+        if (mainMessageLayout.getChildCount() >= 20 && !getLastMessage().equals("ready")) {
             mainMessageLayout.removeAllViews();
             messages.clear();
         }
-
 
         Context context = view.getContext();
 
@@ -69,18 +73,15 @@ public class FragmentMessageContainer extends Fragment {
         Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/SFProText-Regular.ttf");
         message.setTypeface(type);
 
-
         // Параметры иконки
         ImageView icon = new ImageView(context);
         icon.setBackground(user ? ResourcesCompat.getDrawable(getResources(), R.drawable.ic_avatar_user, context.getTheme()) :
                 ResourcesCompat.getDrawable(getResources(), R.drawable.ic_avatar_ai, context.getTheme()));
 
-
         // Параметры разделителя
         View divider = new View(context);
         divider.setLayoutParams(new ViewGroup.LayoutParams(15,15));
         divider.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.white, context.getTheme()));
-
 
         // Параметры всего блока (иконка + сообщение)
         LinearLayoutCompat messageLayout = new LinearLayoutCompat(context);
@@ -89,7 +90,6 @@ public class FragmentMessageContainer extends Fragment {
         params.setMargins(20, 0, 20, 40);
         messageLayout.setLayoutParams(params);
         messageLayout.setGravity(user ? Gravity.RIGHT : Gravity.LEFT);
-
 
         // Параметры расположения блока
         if (user) {
@@ -109,12 +109,20 @@ public class FragmentMessageContainer extends Fragment {
     }
 
     /**
-     * Устанавливаем размер контейнера сообщений
-     * @param height
+     * Set height of message block
+     * @param height - height of message block
      */
     public void setHeightMessageContainer(int height) {
         ScrollView scrollView = view.findViewById(R.id.scroll_view_message);
         scrollView.setMinimumHeight(height);
         rootMessageLayout.getLayoutParams().height = height;
+    }
+
+    /**
+     * Get last message
+     * @return - last message
+     */
+    private String getLastMessage() {
+        return messages.get(messages.size() - 1);
     }
 }
