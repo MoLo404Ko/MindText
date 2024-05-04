@@ -3,6 +3,7 @@
 
     <string name="input_text">Введите текст</string>
     <string name="request_processing">Запрос обрабатывается</string>
+    <string name="cancel_request">Отмена запроса</string>
 
     <string name="fast_choose">Выбор ИИ</string>
     <string name="under_fast_choose">Нажмите на кнопку, чтобы выбрать задачу</string>
@@ -39,7 +40,6 @@
     <string name="criminal">Криминал</string>
     <string name="detective">Детектив</string>
 
-    <string name="choose_length_text">Выберите длину текста</string>
     <string name="under_length">Выберите сколько предложений должно быть в тексте</string>
     <string name="less_10">До 10</string>
     <string name="less_25">До 25</string>
@@ -52,4 +52,12 @@
     <string name="start_generate_msg">Приступим, выберите тему или напишите свою</string>
     <string name="choose_length_text_msg">Выберите длину текста</string>
     <string name="key_words_msg">Теперь введите ключевые слова</string>
+
+    <string name="rus_and_eng_letters">Сообщение содержит английские и русские символовы или специальные символы</string>
+    <string name="language_equals_translate">Введенный язык и язык перевода совпадают</string>
+
+    <string name="couldnt_download_file">Не удалось загрузить файл</string>
+    <string name="external_storage_not_available">Внешнее хранилище недоступно</string>
+    <string name="file_downloaded">Файл загружен в загрузки/MindText</string>
+
 </resources>

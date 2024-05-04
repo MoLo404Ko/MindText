@@ -3,7 +3,6 @@ package com.example.tp.generateText;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,25 +12,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
-import com.example.tp.AddMessage;
-import com.example.tp.ControlVisibleEditTextField;
+import com.example.tp.interfaces.AddMessage;
+import com.example.tp.interfaces.ControlVisibleEditTextField;
 import com.example.tp.R;
-import com.example.tp.SetHeightMessageContainer;
-
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import com.example.tp.interfaces.SetHeightMessageContainer;
 
 public class FragmentBtnLengthText extends Fragment {
     private SetHeightMessageContainer setHeightMessageContainer;
@@ -67,36 +51,42 @@ public class FragmentBtnLengthText extends Fragment {
         controlVisibleEditTextField.setVisibility(false);
     }
 
+    /**
+     * Handler of clicking to buttons of length
+     * @param view - layout
+     */
     private void onChooseLength(View view) {
         AppCompatButton lessTen = view.findViewById(R.id.lessTen);
         AppCompatButton lessTwentyFive = view.findViewById(R.id.lessTwentyFive);
         AppCompatButton lessFifty = view.findViewById(R.id.lessFifty);
 
         lessTen.setOnClickListener(v -> {
-            String length = getResources().getString(R.string.less_10);
-            goToFragmentKeyWords(length);
+            goToFragmentKeyWords(getResources().getString(R.string.less_10));
         });
         lessTwentyFive.setOnClickListener(v -> {
-            String length = getResources().getString(R.string.less_25);
-            goToFragmentKeyWords(length);
+            goToFragmentKeyWords(getResources().getString(R.string.less_25));
         });
         lessFifty.setOnClickListener(v -> {
-            String length = getResources().getString(R.string.less_50);
-            goToFragmentKeyWords(length);
+            goToFragmentKeyWords(getResources().getString(R.string.less_50));
         });
     }
 
+    /**
+     * Go to next fragment
+     * @param length - length of generated text
+     */
     private void goToFragmentKeyWords(String length) {
         FragmentBtnKeyWords fragment = new FragmentBtnKeyWords(mActivity);
 
         Bundle bundle = new Bundle();
+        assert this.getArguments() != null;
         bundle.putString("Article", this.getArguments().getString("Article"));
         bundle.putString("Length", length);
         fragment.setArguments(bundle);
 
-        addMessage.setMessageToContainer(length, fragment,
+        addMessage.addMessage(length, fragment,
                 "fragmentBtnKeyWords", true);
-        addMessage.setMessageToContainer(getResources().getString(R.string.key_words_msg),
+        addMessage.addMessage(getResources().getString(R.string.key_words_msg),
                 null, "", false);
     }
 }

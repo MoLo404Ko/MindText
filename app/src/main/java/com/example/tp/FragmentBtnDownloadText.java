@@ -4,25 +4,26 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+
+import com.example.tp.interfaces.ControlVisibleEditTextField;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class FragmentBtnDownloadText extends Fragment {
-    private Activity mActivity;
+    private final Activity mActivity;
     private ControlVisibleEditTextField controlVisibleEditTextField;
 
     public FragmentBtnDownloadText(Activity mActivity) {
@@ -45,14 +46,13 @@ public class FragmentBtnDownloadText extends Fragment {
     }
 
     private void init(View view) {
-        controlUiComponents();
         onDownloadFileClick(view);
         controlVisibleEditTextField.setVisibility(false);
     }
 
     /**
      * Handler of clicking on download button
-     * @param view
+     * @param view - layout
      */
     private void onDownloadFileClick(View view) {
         AppCompatButton downloadBtn = view.findViewById(R.id.download_btn);
@@ -70,12 +70,19 @@ public class FragmentBtnDownloadText extends Fragment {
                     File textFile = new File(file.getAbsolutePath() +  "/" + Constants.TRANSLATE_TEXT_FILE);
 
                     try {
-                        textFile.createNewFile();
+                        if (textFile.createNewFile()) {
+                            assert this.getArguments() != null;
+                            String content = this.getArguments().getString(Constants.KEY_TEXT);
 
-                        String content = this.getArguments().getString(Constants.KEY_TEXT);
-
-                        fos = new FileOutputStream(textFile);
-                        fos.write(content.getBytes());
+                            fos = new FileOutputStream(textFile);
+                            fos.write(content.getBytes());
+                        }
+                        else {
+                            Handler handler = new Handler(Looper.getMainLooper());
+                            handler.post(() -> {
+                                Toast.makeText(mActivity, getString(R.string.couldnt_download_file), Toast.LENGTH_SHORT).show();
+                            });
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     } finally {
@@ -87,33 +94,21 @@ public class FragmentBtnDownloadText extends Fragment {
                         }
                     }
                 }).start();
-                Toast.makeText(mActivity, "Файл загружен в загрузки/MindText", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, getString(R.string.file_downloaded), Toast.LENGTH_SHORT).show();
             }
-            else {
-                Toast.makeText(mActivity, "Внешнее хранилище недоступно", Toast.LENGTH_SHORT).show();
-            }
+            else Toast.makeText(mActivity, getString(R.string.external_storage_not_available),
+                    Toast.LENGTH_SHORT).show();
         });
     }
 
     /**
      * Checking available of external storage
-     * @return
+     * @return isAvailable
      */
     private boolean checkExternalStorage() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state))
-            return true;
-
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
-    /**
-     * Unblocking UI after get answer from server
-     */
-    public void controlUiComponents() {
-        AppCompatImageButton sendMsgBtn = mActivity.findViewById(R.id.sendMessage);
-        sendMsgBtn.setEnabled(true);
-        sendMsgBtn.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_send,
-                mActivity.getTheme()));
-    }
+
 }

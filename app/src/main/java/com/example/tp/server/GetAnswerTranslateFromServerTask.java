@@ -13,14 +13,18 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Callable;
 
 public class GetAnswerTranslateFromServerTask implements Callable<String> {
-    private String translateText;
-    private String language;
+    private final String translateText;
+    private final String language;
 
     public GetAnswerTranslateFromServerTask(String translateText, String language) {
         this.translateText = translateText;
         this.language = language;
     }
 
+    /**
+     * Request to the server for translate text
+     * @return - text from server
+     */
     @Override
     public String call() throws Exception {
         URL url = new URL(Constants.TRANSLATE_SCRIPT_PATH);

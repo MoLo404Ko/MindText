@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +20,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
 
-import com.example.tp.AddMessage;
+import com.example.tp.interfaces.AddMessage;
 import com.example.tp.ClassWorkingWithNN;
 import com.example.tp.Constants;
-import com.example.tp.ControlVisibleEditTextField;
+import com.example.tp.interfaces.ControlVisibleEditTextField;
 import com.example.tp.FragmentBtnDownloadText;
 import com.example.tp.R;
-import com.example.tp.SetHeightMessageContainer;
+import com.example.tp.interfaces.SetHeightMessageContainer;
 import com.example.tp.server.GetAnswerTranslateFromServerTask;
 
 import java.io.BufferedReader;
@@ -43,7 +45,7 @@ public class FragmentBtnTextForTranslateContainer extends ClassWorkingWithNN {
     private AddMessage addMessage;
     private SetHeightMessageContainer setHeightMessageContainer;
     private ControlVisibleEditTextField controlVisibleEditTextField;
-    private Activity mActivity;
+    private final Activity mActivity;
 
     public FragmentBtnTextForTranslateContainer(Activity mActivity) {
         this.mActivity = mActivity;
@@ -73,15 +75,24 @@ public class FragmentBtnTextForTranslateContainer extends ClassWorkingWithNN {
         onImportFile(view);
     }
 
+    /**
+     * Handler for clicking on the send button
+     */
     private void onClickSendMsg() {
         super.onClickSendMsg(mActivity, addMessage, this,
                 "fragmentBtnTextForTranslateContainer");
     }
 
+    /**
+     * Send a request to the server and waits for a response
+     * @param translateText - text for translate
+     * @return - text from server
+     */
     @Override
     public String requestToServer(String translateText) throws ExecutionException, InterruptedException {
         ExecutorService es = Executors.newSingleThreadExecutor();
 
+        assert this.getArguments() != null;
         Future<String> future = es.submit(new GetAnswerTranslateFromServerTask
                 (translateText, this.getArguments().getString(Constants.KEY_LANGUAGE)));
 
@@ -92,6 +103,7 @@ public class FragmentBtnTextForTranslateContainer extends ClassWorkingWithNN {
 
     /**
      * Import file from storage
+     * View - layout
      */
     private void onImportFile(View view) {
         AppCompatButton importFile = view.findViewById(R.id.importBtn);
@@ -99,7 +111,7 @@ public class FragmentBtnTextForTranslateContainer extends ClassWorkingWithNN {
         importFile.setOnClickListener(view1 -> {
             Intent getFile = new Intent(Intent.ACTION_GET_CONTENT);
             getFile.addCategory(Intent.CATEGORY_OPENABLE);
-            getFile.setType("*/*");
+            getFile.setType("text/*");
 
             getFileResultLauncher.launch(getFile);
         });
@@ -117,6 +129,7 @@ public class FragmentBtnTextForTranslateContainer extends ClassWorkingWithNN {
                     BufferedReader bufferedReader = null;
 
                     try {
+                        assert result.getData() != null;
                         Uri uri = result.getData().getData();
 
                         inputStream = getContext().getContentResolver().openInputStream(uri);
@@ -129,9 +142,7 @@ public class FragmentBtnTextForTranslateContainer extends ClassWorkingWithNN {
                         while ((line = bufferedReader.readLine()) != null)
                             fileText.append(line);
 
-
                         getAnswerFromServer(fileText);
-
                     } catch (IOException e) {
                         e.printStackTrace();
                     } finally {
@@ -153,50 +164,47 @@ public class FragmentBtnTextForTranslateContainer extends ClassWorkingWithNN {
      * @param fileText - import file text
      */
     private void getAnswerFromServer(StringBuilder fileText) {
-        if (super.identifyLanguage(fileText.toString(), this.getArguments().getString(Constants.KEY_LANGUAGE))) {
-            controlUiComponents(this.getView());
-            addMessage.setMessageToContainer(fileText.toString(), null, "",true);
-            addMessage.setMessageToContainer(getString(R.string.request_processing), null, "",false);
-
-            Runnable task = () -> {
-                String answer;
-                try {
-                    answer = clearAnswer(requestToServer(fileText.toString()));
-                    super.addAnswerOnUIThread(addMessage, answer, new FragmentBtnDownloadText(mActivity), "fragmentBtnDownloadText");
-                } catch (ExecutionException e) {
-                    throw new RuntimeException(e);
-                } catch (InterruptedException e) {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(() -> {
-                        addMessage.setMessageToContainer("Отмена запроса", null, "", false);
-                    });
-                }
-            };
-
-            Thread getAnswer = new Thread(task, "translateTextThread");
-            getAnswer.start();
-        }
+        controlUiComponents(false);
+        addMessage.addMessage(fileText.toString(), null, "",true);
+        super.handlerOfSendMessageForTranslate(this, fileText.toString(), addMessage, mActivity);
+        controlUiComponents(true);
     }
 
 
     /**
      * Blocking UI after sending of request
-     * @param view - this layout
      */
-    public void controlUiComponents(View view) {
+    public void controlUiComponents(boolean isEnable) {
+        View layout = this.getView();
         EditText inputField = mActivity.findViewById(R.id.inputField);
-        inputField.setEnabled(false);
-        inputField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.shape_input_field_blocked,
-                mActivity.getTheme()));
-
         AppCompatImageButton sendMsgBtn = mActivity.findViewById(R.id.sendMessage);
-        sendMsgBtn.setEnabled(false);
-        sendMsgBtn.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.send_msg_blocked,
-                mActivity.getTheme()));
+        AppCompatButton importBtn = layout.findViewById(R.id.importBtn);
 
-        AppCompatButton importBtn = view.findViewById(R.id.importBtn);
-        importBtn.setEnabled(false);
-        importBtn.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_import_blocked,
-                mActivity.getTheme()));
+        if (isEnable) {
+            inputField.setEnabled(true);
+            inputField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.shape_input_field,
+                    mActivity.getTheme()));
+
+            sendMsgBtn.setEnabled(true);
+            sendMsgBtn.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_send,
+                    mActivity.getTheme()));
+
+            importBtn.setEnabled(true);
+            importBtn.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_import,
+                    mActivity.getTheme()));
+        }
+        else {
+            inputField.setEnabled(false);
+            inputField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.shape_input_field_blocked,
+                    mActivity.getTheme()));
+
+            sendMsgBtn.setEnabled(false);
+            sendMsgBtn.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.send_msg_blocked,
+                    mActivity.getTheme()));
+
+            importBtn.setEnabled(false);
+            importBtn.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_import_blocked,
+                    mActivity.getTheme()));
+        }
     }
 }

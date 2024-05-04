@@ -4,7 +4,9 @@ package com.example.tp;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageButton;
@@ -18,19 +20,22 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.tp.generateText.FragmentBtnChooseArticle;
 import com.example.tp.generateText.FragmentBtnLengthText;
+import com.example.tp.interfaces.AddMessage;
+import com.example.tp.interfaces.ControlVisibleEditTextField;
+import com.example.tp.interfaces.SetHeightMessageContainer;
+import com.example.tp.interfaces.SetActionBar;
 import com.example.tp.translateText.FragmentBtnTranslateContainerChooseLanguage;
 
 import java.util.Set;
 
 public class MainPageActivity extends FragmentActivity implements SetHeightMessageContainer, AddMessage,
-        ControlVisibleEditTextField {
+        ControlVisibleEditTextField, SetActionBar {
     private FragmentMessageContainer fragmentMessageContainer = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_page);
-
         init();
     }
 
@@ -71,17 +76,17 @@ public class MainPageActivity extends FragmentActivity implements SetHeightMessa
 
     /**
      * Set message to message container
-     * @param text
-     * @param fragment
-     * @param user
+     * @param text - Text to add
+     * @param fragment - current fragment
+     * @param user - isUser
      */
     @Override
-    public void setMessageToContainer(String text, Fragment fragment, String fragmentTag, boolean user) {
+    public void addMessage(String text, Fragment fragment, String fragmentTag, boolean user) {
         // add message
         if (!text.isEmpty())
             fragmentMessageContainer.addMessage(text, user);
 
-        // redraw message container
+        // redraw block of messages
         if (fragment != null) {
             ConstraintLayout constraintLayout = findViewById(R.id.root_layout);
             ConstraintSet set = new ConstraintSet();
@@ -176,7 +181,7 @@ public class MainPageActivity extends FragmentActivity implements SetHeightMessa
 
                 if (fragment != null) {
                     ft.replace(R.id.btn_container, fragment, tag).commit();
-                    setMessageToContainer("назад", null,
+                    addMessage("назад", null,
                             "fragmentBtnTranslateContainerChooseLanguage",true);
                 }
             }
@@ -194,6 +199,24 @@ public class MainPageActivity extends FragmentActivity implements SetHeightMessa
                 break;
             }
         }
+    }
+
+    /**
+     * Set action bar
+     * @param title - name of page
+     */
+    @Override
+    public void setActionBar(String title, boolean backArrowIsVisible) {
+        TextView titlePage = this.findViewById(R.id.titlePage);
+        AppCompatImageButton backBtn = this.findViewById(R.id.backArrowBtn);
+
+        if (backArrowIsVisible) backBtn.setVisibility(View.VISIBLE);
+        else backBtn.setVisibility(View.GONE);
+
+        titlePage.setText(title);
+
+        titlePage.setTextSize(16);
+        titlePage.setTextColor(getResources().getColor(R.color.black, this.getTheme()));
     }
 }
 

@@ -12,16 +12,20 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.example.tp.generateText.FragmentBtnChooseArticle;
+import com.example.tp.interfaces.AddMessage;
+import com.example.tp.interfaces.ControlVisibleEditTextField;
+import com.example.tp.interfaces.SetActionBar;
+import com.example.tp.interfaces.SetHeightMessageContainer;
 import com.example.tp.translateText.FragmentBtnTranslateContainerChooseLanguage;
 
 public class FragmentBtnGeneralContainer extends Fragment {
     private SetHeightMessageContainer setHeightMessageContainer;
     private AddMessage addMessage;
+    private SetActionBar setActionBar;
     private ControlVisibleEditTextField controlVisibleEditTextField;
-    private Activity mActivity;
+    private final Activity mActivity;
 
     public FragmentBtnGeneralContainer(Activity mActivity) {
         this.mActivity = mActivity;
@@ -33,6 +37,7 @@ public class FragmentBtnGeneralContainer extends Fragment {
         setHeightMessageContainer = (SetHeightMessageContainer) context;
         addMessage = (AddMessage) context;
         controlVisibleEditTextField = (ControlVisibleEditTextField) context;
+        setActionBar = (SetActionBar) context;
     }
 
     @Nullable
@@ -52,26 +57,13 @@ public class FragmentBtnGeneralContainer extends Fragment {
 
     private void init(View view) {
         onClickGenerateText(view);
-        setToolBar();
+        setActionBar.setActionBar(getString(R.string.main), false);
         controlVisibleEditTextField.setVisibility(false);
     }
 
     /**
-     * Set title and show back button
-     */
-    private void setToolBar() {
-        TextView titlePage = (TextView)mActivity.findViewById(R.id.titlePage);
-        mActivity.findViewById(R.id.backArrowBtn).setVisibility(View.GONE);
-
-        titlePage.setText(getResources().getString(R.string.main));
-
-        titlePage.setTextSize(16);
-        titlePage.setTextColor(getResources().getColor(R.color.black, mActivity.getTheme()));
-    }
-
-    /**
-     * Обработка нажатия клика на кнопку "генерация текста"
-     * @param view
+     * Go to generate text
+     * @param view - layout
      */
     private void onClickGenerateText(View view) {
         AppCompatButton generateBtn = view.findViewById(R.id.generate_text);
@@ -80,16 +72,16 @@ public class FragmentBtnGeneralContainer extends Fragment {
             String text2 = getResources().getString(R.string.start_generate_msg);
 
             view.post(() -> {
-                addMessage.setMessageToContainer(text1, null, "", true);
-                addMessage.setMessageToContainer(text2, new FragmentBtnChooseArticle(mActivity),
+                addMessage.addMessage(text1, null, "", true);
+                addMessage.addMessage(text2, new FragmentBtnChooseArticle(mActivity),
                         "fragmentBtnChooseArticle",false);
             });
         });
     }
 
     /**
-     * Обработка нажатия клика на кнопку "перевод текста"
-     * @param view
+     * Go to translate text
+     * @param view - layout
      */
     private void onClickTranslateText(View view) {
         AppCompatButton translateBtn = view.findViewById(R.id.translate_text);
@@ -99,10 +91,10 @@ public class FragmentBtnGeneralContainer extends Fragment {
             String text2 = getResources().getString(R.string.start_translate);
 
             view.post(() -> {
-                addMessage.setMessageToContainer(text1,new FragmentBtnTranslateContainerChooseLanguage(mActivity),
+                addMessage.addMessage(text1,new FragmentBtnTranslateContainerChooseLanguage(mActivity),
                         "fragmentBtnTranslateContainerChooseLanguage",
                         true);
-                addMessage.setMessageToContainer(text2, null, "",false);
+                addMessage.addMessage(text2, null, "",false);
             });
         });
     }

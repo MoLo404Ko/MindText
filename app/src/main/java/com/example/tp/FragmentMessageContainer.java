@@ -1,11 +1,9 @@
 package com.example.tp;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
@@ -29,7 +26,7 @@ public class FragmentMessageContainer extends Fragment {
     private View view = null;
     private LinearLayoutCompat mainMessageLayout = null;
     private ConstraintLayout rootMessageLayout = null;
-    private List<String> messages = new ArrayList<>();
+    private final List<String> messages = new ArrayList<>();
 
     @Nullable
     @Override
@@ -38,10 +35,10 @@ public class FragmentMessageContainer extends Fragment {
 
         mainMessageLayout = view.findViewById(R.id.main_message_layout);
         rootMessageLayout = view.findViewById(R.id.root_message_layout);
+
+        assert getArguments() != null;
         setHeightMessageContainer(getArguments().getInt("height"));
-
         addMessage(getResources().getString(R.string.start_msg), false);
-
 
         return view;
     }
@@ -60,7 +57,7 @@ public class FragmentMessageContainer extends Fragment {
 
         Context context = view.getContext();
 
-        // Параметры сообщения
+        // Message settings
         TextView message = new TextView(view.getContext());
         message.setMaxWidth(Resources.getSystem().getDisplayMetrics().heightPixels / 3);
         message.setText(text_msg);
@@ -73,17 +70,17 @@ public class FragmentMessageContainer extends Fragment {
         Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/SFProText-Regular.ttf");
         message.setTypeface(type);
 
-        // Параметры иконки
+        // Icon settings
         ImageView icon = new ImageView(context);
         icon.setBackground(user ? ResourcesCompat.getDrawable(getResources(), R.drawable.ic_avatar_user, context.getTheme()) :
                 ResourcesCompat.getDrawable(getResources(), R.drawable.ic_avatar_ai, context.getTheme()));
 
-        // Параметры разделителя
+        // Divider settings
         View divider = new View(context);
         divider.setLayoutParams(new ViewGroup.LayoutParams(15,15));
         divider.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.white, context.getTheme()));
 
-        // Параметры всего блока (иконка + сообщение)
+        // Background settings
         LinearLayoutCompat messageLayout = new LinearLayoutCompat(context);
         LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams
                 (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -91,7 +88,7 @@ public class FragmentMessageContainer extends Fragment {
         messageLayout.setLayoutParams(params);
         messageLayout.setGravity(user ? Gravity.RIGHT : Gravity.LEFT);
 
-        // Параметры расположения блока
+        // Location's settings
         if (user) {
             messageLayout.addView(message);
             messageLayout.addView(divider);

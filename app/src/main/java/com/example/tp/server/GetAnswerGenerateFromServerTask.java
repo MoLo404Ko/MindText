@@ -20,6 +20,10 @@ public class GetAnswerGenerateFromServerTask implements Callable<String> {
         this.promptText = promptText;
     }
 
+    /**
+     * Request to the server for generate text
+     * @return - text from server
+     */
     @Override
     public String call() throws Exception {
         URL url = new URL(Constants.GENERATE_SCRIPT_PATH);

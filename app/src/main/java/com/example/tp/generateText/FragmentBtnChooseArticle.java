@@ -12,17 +12,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 
-import com.example.tp.AddMessage;
-import com.example.tp.ControlVisibleEditTextField;
+import com.example.tp.interfaces.AddMessage;
+import com.example.tp.interfaces.ControlVisibleEditTextField;
 import com.example.tp.MainHandler;
 import com.example.tp.R;
-import com.example.tp.SetHeightMessageContainer;
+import com.example.tp.interfaces.SetActionBar;
+import com.example.tp.interfaces.SetHeightMessageContainer;
 
 public class FragmentBtnChooseArticle extends MainHandler {
-    private Activity mActivity;
+    private final Activity mActivity;
     private SetHeightMessageContainer setHeightMessageContainer;
     private AddMessage addMessage;
     private ControlVisibleEditTextField controlVisibleEditTextField;
+    private SetActionBar setActionBar;
 
     public FragmentBtnChooseArticle(Activity mActivity) {
         this.mActivity = mActivity;
@@ -34,6 +36,7 @@ public class FragmentBtnChooseArticle extends MainHandler {
         addMessage = (AddMessage) context;
         controlVisibleEditTextField = (ControlVisibleEditTextField) context;
         setHeightMessageContainer = (SetHeightMessageContainer) context;
+        setActionBar = (SetActionBar) context;
     }
 
     @Nullable
@@ -47,28 +50,15 @@ public class FragmentBtnChooseArticle extends MainHandler {
     }
 
     private void init(View view) {
-        setToolBar();
+        setActionBar.setActionBar(getString(R.string.genTX), true);
         onChooseArticle(view);
         onClickSendMsg();
         controlVisibleEditTextField.setVisibility(true);
     }
 
     /**
-     * Set title and show back button
-     */
-    private void setToolBar() {
-        TextView titlePage = mActivity.findViewById(R.id.titlePage);
-        mActivity.findViewById(R.id.backArrowBtn).setVisibility(View.VISIBLE);
-
-        titlePage.setText(getResources().getString(R.string.genTX));
-
-        titlePage.setTextSize(16);
-        titlePage.setTextColor(getResources().getColor(R.color.black, mActivity.getTheme()));
-    }
-
-    /**
      * Handler of choosing of article
-     * @param view
+     * @param view - layout
      */
     public void onChooseArticle(View view) {
         AppCompatButton animalBtn = view.findViewById(R.id.animalBtn);
@@ -78,52 +68,30 @@ public class FragmentBtnChooseArticle extends MainHandler {
         AppCompatButton criminalBtn = view.findViewById(R.id.criminalBtn);
         AppCompatButton detectiveBtn = view.findViewById(R.id.detectiveBtn);
 
-        String text2 = getResources().getString(R.string.choose_length_text_msg);
-        final String[] text1 = {""};
-
-        animalBtn.setOnClickListener(v -> {
-            text1[0] = getResources().getString(R.string.animal_article);
-            goToFragmentLength(text2, text1);
-        });
-
-        peopleBtn.setOnClickListener(v -> {
-            text1[0] = getResources().getString(R.string.people_article);
-            goToFragmentLength(text2, text1);
-        });
-
-        technologyBtn.setOnClickListener(v -> {
-            text1[0] = getResources().getString(R.string.technology_article);
-            goToFragmentLength(text2, text1);
-        });
-
-        funHistoryBtn.setOnClickListener(v -> {
-            text1[0] = getResources().getString(R.string.fun_history);
-            goToFragmentLength(text2, text1);
-        });
-
-        criminalBtn.setOnClickListener(v -> {
-            text1[0] = getResources().getString(R.string.criminal);
-            goToFragmentLength(text2, text1);
-        });
-
-        detectiveBtn.setOnClickListener(v -> {
-            text1[0] = getResources().getString(R.string.detective);
-            goToFragmentLength(text2, text1);
-        });
+        animalBtn.setOnClickListener(v -> goToFragmentLength(getResources().getString(R.string.animal_article)));
+        peopleBtn.setOnClickListener(v -> goToFragmentLength(getResources().getString(R.string.people_article)));
+        technologyBtn.setOnClickListener(v -> goToFragmentLength(getResources().getString(R.string.technology_article)));
+        funHistoryBtn.setOnClickListener(v -> goToFragmentLength(getResources().getString(R.string.fun_history)));
+        criminalBtn.setOnClickListener(v -> goToFragmentLength(getResources().getString(R.string.criminal)));
+        detectiveBtn.setOnClickListener(v -> goToFragmentLength(getResources().getString(R.string.detective)));
     }
 
-    private void goToFragmentLength(String text2, String[] text1) {
+    /**
+     * Goes to the next fragment and sets the arguments
+     * @param article - theme of the text to generate
+     */
+    private void goToFragmentLength(String article) {
         FragmentBtnLengthText fragment = new FragmentBtnLengthText(mActivity);
 
         Bundle bundle = new Bundle();
-        bundle.putString("Article", text1[0]);
+        bundle.putString("Article", article);
         fragment.setArguments(bundle);
 
-        addMessage.setMessageToContainer(text1[0], fragment, "fragmentBtnLengthText", true);
-        addMessage.setMessageToContainer(text2, null, "", false);
+        addMessage.addMessage(article, fragment, "fragmentBtnLengthText", true);
+        addMessage.addMessage(getString(R.string.choose_article), null, "", false);
     }
 
     private void onClickSendMsg() {
-        super.onClickSendMsg(mActivity, addMessage, new FragmentBtnLengthText(mActivity), "fragmentBtnLengthText");
+        super.onClickSendMsg(mActivity, addMessage, this);
     }
 }
