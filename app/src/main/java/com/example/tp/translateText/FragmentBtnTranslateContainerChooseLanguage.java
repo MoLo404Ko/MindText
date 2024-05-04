@@ -1,36 +1,23 @@
-package com.example.tp;
+package com.example.tp.translateText;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
 
-import com.example.tp.server.GetAnswerFromServerTask;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import com.example.tp.AddMessage;
+import com.example.tp.Constants;
+import com.example.tp.ControlVisibleEditTextField;
+import com.example.tp.R;
+import com.example.tp.SetHeightMessageContainer;
 
 public class FragmentBtnTranslateContainerChooseLanguage extends Fragment {
     private SetHeightMessageContainer setHeightMessageContainer;
@@ -88,10 +75,16 @@ public class FragmentBtnTranslateContainerChooseLanguage extends Fragment {
         AppCompatButton englishLanguage = view.findViewById(R.id.english_language);
 
         String text2 = getResources().getString(R.string.chosen_language);
+        Bundle bundle = new Bundle();
 
         russianLanguage.setOnClickListener(view1 -> view.post(() -> {
             String text1 = getResources().getString(R.string.animal_article);
-            addMessage.setMessageToContainer(text1, new FragmentBtnTextForTranslateContainer(mActivity),
+
+            FragmentBtnTextForTranslateContainer fragment = new FragmentBtnTextForTranslateContainer(mActivity);
+            bundle.putString(Constants.KEY_LANGUAGE, "1");
+            fragment.setArguments(bundle);
+
+            addMessage.setMessageToContainer(text1, fragment,
                     "fragmentBtnTextForTranslateContainer", true);
             addMessage.setMessageToContainer(text2, null, "",false);
         }));
@@ -99,7 +92,12 @@ public class FragmentBtnTranslateContainerChooseLanguage extends Fragment {
 
         englishLanguage.setOnClickListener(view1 -> {
             String text1 = getResources().getString(R.string.english_language);
-            addMessage.setMessageToContainer(text1, new FragmentBtnTextForTranslateContainer(mActivity),
+
+            FragmentBtnTextForTranslateContainer fragment = new FragmentBtnTextForTranslateContainer(mActivity);
+            bundle.putString(Constants.KEY_LANGUAGE, "0");
+            fragment.setArguments(bundle);
+
+            addMessage.setMessageToContainer(text1, fragment,
                     "fragmentBtnTextForTranslateContainer", true);
             addMessage.setMessageToContainer(text2, null, "",false);
         });

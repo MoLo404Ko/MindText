@@ -2,41 +2,39 @@ package com.example.tp.server;
 
 import android.util.Log;
 
-import java.io.BufferedOutputStream;
+import com.example.tp.Constants;
+
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Callable;
 
-public class GetAnswerFromServerTask implements Callable<String> {
+public class GetAnswerTranslateFromServerTask implements Callable<String> {
     private String scriptPath;
-    private String data;
+    private String translateText;
+    private String language;
 
-    public GetAnswerFromServerTask(String scriptPath, String data) {
+    public GetAnswerTranslateFromServerTask(String scriptPath, String translateText, String language) {
         this.scriptPath = scriptPath;
-        this.data = data;
+        this.translateText = translateText;
+        this.language = language;
     }
 
     @Override
     public String call() throws Exception {
-        URL url = new URL("https://practicenn.ru/script.php");
+        URL url = new URL(Constants.TRANSLATE_SCRIPT_PATH);
 
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
         connection.setChunkedStreamingMode(8096);
-//        connection.setRequestProperty("Content-Type", "text/html");
         connection.setRequestProperty("Accept", "text/html");
 
-        Log.d("MyLog", data + " ");
-        String postText = "data=" + data;
+        String postText = "data=" + translateText + "&language=" + language;
+
         byte[] byteData = postText.getBytes(StandardCharsets.UTF_8);
 
         DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
@@ -47,6 +45,7 @@ public class GetAnswerFromServerTask implements Callable<String> {
                 new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
 
 
+        Log.d("MyLog", connection.getResponseCode() + " ");
         StringBuilder response = new StringBuilder();
         String responseLine;
 

@@ -7,11 +7,14 @@ import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import java.io.File;
@@ -42,6 +45,7 @@ public class FragmentBtnDownloadText extends Fragment {
     }
 
     private void init(View view) {
+        controlUiComponents();
         onDownloadFileClick(view);
         controlVisibleEditTextField.setVisibility(false);
     }
@@ -101,5 +105,15 @@ public class FragmentBtnDownloadText extends Fragment {
             return true;
 
         return false;
+    }
+
+    /**
+     * Unblocking UI after get answer from server
+     */
+    public void controlUiComponents() {
+        AppCompatImageButton sendMsgBtn = mActivity.findViewById(R.id.sendMessage);
+        sendMsgBtn.setEnabled(true);
+        sendMsgBtn.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_send,
+                mActivity.getTheme()));
     }
 }

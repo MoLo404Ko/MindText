@@ -4,7 +4,6 @@ package com.example.tp;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.widget.EditText;
 
 import androidx.annotation.Nullable;
@@ -18,17 +17,9 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.tp.generateText.FragmentBtnChooseArticle;
 import com.example.tp.generateText.FragmentBtnLengthText;
+import com.example.tp.translateText.FragmentBtnTranslateContainerChooseLanguage;
 
-import java.io.IOException;
 import java.util.Set;
-import org.json.*;
-
-import okhttp3.FormBody;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class MainPageActivity extends FragmentActivity implements SetHeightMessageContainer, AddMessage,
         ControlVisibleEditTextField {
@@ -145,8 +136,12 @@ public class MainPageActivity extends FragmentActivity implements SetHeightMessa
             if (!fragmentTag.isEmpty()) {
 
                 Set<Thread> set = Thread.getAllStackTraces().keySet();
-                for (Thread t: set)
-                    if (t.getName().equals("translateTextThread")) t.interrupt();
+                for (Thread t: set) {
+                    if (t.getName().equals("translateTextThread") || t.getName().equals("generateTextThread")) {
+                        t.interrupt();
+                        break;
+                    }
+                }
 
                 switch (fragmentTag) {
                     case "fragmentBtnTextForTranslateContainer": {

@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.tp.generateText.FragmentBtnChooseArticle;
+import com.example.tp.translateText.FragmentBtnTranslateContainerChooseLanguage;
 
 public class FragmentBtnGeneralContainer extends Fragment {
     private SetHeightMessageContainer setHeightMessageContainer;

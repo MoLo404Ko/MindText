@@ -1,17 +1,13 @@
 package com.example.tp;
 
 import android.app.Activity;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import androidx.fragment.app.Fragment;
 
 import java.util.concurrent.ExecutionException;
 
 public abstract class ClassWorkingWithNN extends MainHandler {
-    abstract String requestToServerForTranslateScript(String data) throws ExecutionException, InterruptedException;
-    abstract void blockingUiComponents(View view);
+    public abstract String requestToServerForTranslateScript(String data) throws ExecutionException, InterruptedException;
 
     /**
      * Handler of clicking on send btn

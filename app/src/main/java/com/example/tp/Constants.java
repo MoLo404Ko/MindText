@@ -4,7 +4,8 @@ public class Constants {
     public static final String APP_NAME = "MindText";
     public static final String TRANSLATE_TEXT_FILE = "translatedText.txt";
     public static final String KEY_TEXT = "TextKey";
-    public static final String TRANSLATE_SCRIPT_PATH = "https://practicenn.ru/script.php";
+    public static final String KEY_LANGUAGE = "LanguageKey";
+    public static final String TRANSLATE_SCRIPT_PATH = "https://practicenn.ru/translate.php";
 
     /**
      * Документация для получения токена

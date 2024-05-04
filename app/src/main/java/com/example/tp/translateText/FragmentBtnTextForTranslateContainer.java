@@ -1,4 +1,4 @@
-package com.example.tp;
+package com.example.tp.translateText;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,14 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.example.tp.server.GetAnswerFromServerTask;
+import com.example.tp.AddMessage;
+import com.example.tp.ClassWorkingWithNN;
+import com.example.tp.Constants;
+import com.example.tp.ControlVisibleEditTextField;
+import com.example.tp.FragmentBtnDownloadText;
+import com.example.tp.R;
+import com.example.tp.SetHeightMessageContainer;
+import com.example.tp.server.GetAnswerTranslateFromServerTask;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -67,14 +75,16 @@ public class FragmentBtnTextForTranslateContainer extends ClassWorkingWithNN {
     }
 
     private void onClickSendMsg() {
-        super.onClickSendMsg(mActivity, addMessage, new FragmentBtnDownloadText(mActivity),
-                "fragmentBtnDownloadText");
+        super.onClickSendMsg(mActivity, addMessage, this,
+                "fragmentBtnTextForTranslateContainer");
     }
 
     @Override
-    String requestToServerForTranslateScript(String translateText) throws ExecutionException, InterruptedException {
+    public String requestToServerForTranslateScript(String translateText) throws ExecutionException, InterruptedException {
         ExecutorService es = Executors.newSingleThreadExecutor();
-        Future<String> future = es.submit(new GetAnswerFromServerTask(Constants.TRANSLATE_SCRIPT_PATH, translateText));
+
+        Future<String> future = es.submit(new GetAnswerTranslateFromServerTask
+                (Constants.TRANSLATE_SCRIPT_PATH, translateText, this.getArguments().getString(Constants.KEY_LANGUAGE)));
 
         es.shutdown();
 
@@ -93,7 +103,6 @@ public class FragmentBtnTextForTranslateContainer extends ClassWorkingWithNN {
             getFile.setType("*/*");
 
             getFileResultLauncher.launch(getFile);
-            blockingUiComponents(view);
         });
     }
 
@@ -121,8 +130,6 @@ public class FragmentBtnTextForTranslateContainer extends ClassWorkingWithNN {
                         while ((line = bufferedReader.readLine()) != null)
                             fileText.append(line);
 
-                        addMessage.setMessageToContainer(fileText.toString(), null, "",true);
-                        addMessage.setMessageToContainer(getString(R.string.request_processing), null, "",false);
 
                         getAnswerFromServer(fileText);
 
@@ -144,30 +151,40 @@ public class FragmentBtnTextForTranslateContainer extends ClassWorkingWithNN {
 
     /**
      * Get answer from server and add on UI thread
-     * @param fileText
+     * @param fileText - import file text
      */
     private void getAnswerFromServer(StringBuilder fileText) {
-        Runnable task = () -> {
-            String answer;
-            try {
-                answer = clearAnswer(requestToServerForTranslateScript(fileText.toString()));
-                super.addAnswerOnUIThread(addMessage, answer, new FragmentBtnDownloadText(mActivity), "fragmentBtnDownloadText");
-            } catch (ExecutionException e) {
-                throw new RuntimeException(e);
-            } catch (InterruptedException e) {
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(() -> {
-                    addMessage.setMessageToContainer("Отмена запроса", null, "", false);
-                });
-            }
-        };
+        if (super.identifyLanguage(fileText.toString(), this.getArguments().getString(Constants.KEY_LANGUAGE))) {
+            controlUiComponents(this.getView());
+            addMessage.setMessageToContainer(fileText.toString(), null, "",true);
+            addMessage.setMessageToContainer(getString(R.string.request_processing), null, "",false);
 
-        Thread getAnswer = new Thread(task, "translateTextThread");
-        getAnswer.start();
+            Runnable task = () -> {
+                String answer;
+                try {
+                    answer = clearAnswer(requestToServerForTranslateScript(fileText.toString()));
+                    super.addAnswerOnUIThread(addMessage, answer, new FragmentBtnDownloadText(mActivity), "fragmentBtnDownloadText");
+                } catch (ExecutionException e) {
+                    throw new RuntimeException(e);
+                } catch (InterruptedException e) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(() -> {
+                        addMessage.setMessageToContainer("Отмена запроса", null, "", false);
+                    });
+                }
+            };
+
+            Thread getAnswer = new Thread(task, "translateTextThread");
+            getAnswer.start();
+        }
     }
 
-    @Override
-    void blockingUiComponents(View view) {
+
+    /**
+     * Blocking UI after sending of request
+     * @param view - this layout
+     */
+    public void controlUiComponents(View view) {
         EditText inputField = mActivity.findViewById(R.id.inputField);
         inputField.setEnabled(false);
         inputField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.shape_input_field_blocked,
