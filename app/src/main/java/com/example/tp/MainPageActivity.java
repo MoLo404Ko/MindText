@@ -105,15 +105,23 @@ public class MainPageActivity extends FragmentActivity implements SetHeightMessa
      */
      public void setVisibility(boolean isVisible) {
         EditText inputField = findViewById(R.id.inputField);
+        AppCompatImageButton sendBtn = findViewById(R.id.sendMessage);
+
         inputField.setText("");
 
         if (isVisible) {
             inputField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.shape_input_field, getTheme()));
             inputField.setEnabled(true);
+
+            sendBtn.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_send, getTheme()));
+            sendBtn.setEnabled(true);
         }
         else {
             inputField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.shape_input_field_blocked, getTheme()));
             inputField.setEnabled(false);
+
+            sendBtn.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_send_blocked, getTheme()));
+            sendBtn.setEnabled(false);
         }
     }
 
@@ -147,8 +155,9 @@ public class MainPageActivity extends FragmentActivity implements SetHeightMessa
             FragmentTransaction ft = fm.beginTransaction();
             String fragmentTag = fm.getFragments().get(1).getTag();
 
+            assert fragmentTag != null;
             if (!fragmentTag.isEmpty()) {
-                checkThread();
+                if (checkThread()) addMessage(getString(R.string.cancel_request), null, "", false);
 
                 Fragment fragment = null;
                 String tag = "";
@@ -190,15 +199,18 @@ public class MainPageActivity extends FragmentActivity implements SetHeightMessa
 
     /**
      * Check the streams, if such exist, then we interrupt them when going back
+     * return - thread if found
      */
-    private void checkThread() {
+    private boolean checkThread() {
         Set<Thread> set = Thread.getAllStackTraces().keySet();
         for (Thread t: set) {
             if (t.getName().equals("translateTextThread") || t.getName().equals("generateTextThread")) {
                 t.interrupt();
-                break;
+                return true;
             }
         }
+
+        return false;
     }
 
     /**

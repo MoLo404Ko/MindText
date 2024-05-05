@@ -129,6 +129,7 @@ public class MainHandler extends Fragment {
     protected void handlerOfSendMessageForTranslate(Fragment fragment, String message,
                                                   AddMessage addMessage, Activity mActivity) {
         Bundle args = fragment.getArguments();
+        assert args != null;
         String keyLanguage = args.getString(Constants.KEY_LANGUAGE);
 
         boolean correct = identifyLanguage(message, keyLanguage);
@@ -138,18 +139,20 @@ public class MainHandler extends Fragment {
                 String answer;
                 try {
                     handler.post(() -> {
-                        ((FragmentBtnTextForTranslateContainer) fragment).controlUiComponents(true);
+                        ((FragmentBtnTextForTranslateContainer) fragment).controlUiComponents(false);
                     });
+
                     answer = ((FragmentBtnTextForTranslateContainer)fragment).requestToServer(message);
                     answer = ((FragmentBtnTextForTranslateContainer) fragment).clearAnswer(answer);
 
-                    addAnswerOnUIThread(addMessage, answer, new FragmentBtnDownloadText(mActivity));
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
                     handler.post(() -> {
-                        addMessage.addMessage(getString(R.string.cancel_request), null, "", false);
+                        ((FragmentBtnTextForTranslateContainer) fragment).controlUiComponents(true);
                     });
+
+                    addAnswerOnUIThread(addMessage, answer, new FragmentBtnDownloadText(mActivity));
+
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
                 }
             };
 
@@ -180,7 +183,7 @@ public class MainHandler extends Fragment {
         if (message.matches(engRegex)) engLanguage = true;
 
         if (!rusLanguage && !engLanguage) {
-            Toast.makeText(getContext(), R.string.rus_and_eng_letters, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.rus_and_eng_letters, Toast.LENGTH_LONG).show();
             return false;
         }
 
@@ -189,7 +192,7 @@ public class MainHandler extends Fragment {
         else {
             Handler handler = new Handler(Looper.getMainLooper());
             handler.post(() -> {
-                Toast.makeText(getContext(), R.string.language_equals_translate, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.language_equals_translate, Toast.LENGTH_LONG).show();
             });
             return false;
         }
@@ -211,15 +214,9 @@ public class MainHandler extends Fragment {
                 answer = ((FragmentBtnKeyWords)fragment).requestToServer(message);
                 answer = ((FragmentBtnKeyWords) fragment).clearAnswer(answer);
 
-                FragmentBtnDownloadText f = new FragmentBtnDownloadText(mActivity);
                 addAnswerOnUIThread(addMessage, answer, new FragmentBtnDownloadText(mActivity));
-            } catch (ExecutionException e) {
+            } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
-            } catch (InterruptedException e) {
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(() -> {
-                    addMessage.addMessage("Отмена запроса", null, "", false);
-                });
             }
         };
         Thread thread = new Thread(runnable, "generateTextThread");

@@ -164,44 +164,25 @@ public class FragmentBtnTextForTranslateContainer extends ClassWorkingWithNN {
      * @param fileText - import file text
      */
     private void getAnswerFromServer(StringBuilder fileText) {
-        controlUiComponents(false);
         addMessage.addMessage(fileText.toString(), null, "",true);
         super.handlerOfSendMessageForTranslate(this, fileText.toString(), addMessage, mActivity);
-        controlUiComponents(true);
     }
 
 
     /**
      * Blocking UI after sending of request
      */
-    public void controlUiComponents(boolean isEnable) {
-        View layout = this.getView();
-        EditText inputField = mActivity.findViewById(R.id.inputField);
-        AppCompatImageButton sendMsgBtn = mActivity.findViewById(R.id.sendMessage);
-        AppCompatButton importBtn = layout.findViewById(R.id.importBtn);
+    public void controlUiComponents(boolean isVisible) {
+        AppCompatButton importBtn = this.getView().findViewById(R.id.importBtn);
 
-        if (isEnable) {
-            inputField.setEnabled(true);
-            inputField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.shape_input_field,
-                    mActivity.getTheme()));
-
-            sendMsgBtn.setEnabled(true);
-            sendMsgBtn.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_send,
-                    mActivity.getTheme()));
-
+        if (isVisible) {
+            controlVisibleEditTextField.setVisibility(true);
             importBtn.setEnabled(true);
             importBtn.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_import,
                     mActivity.getTheme()));
         }
         else {
-            inputField.setEnabled(false);
-            inputField.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.shape_input_field_blocked,
-                    mActivity.getTheme()));
-
-            sendMsgBtn.setEnabled(false);
-            sendMsgBtn.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.send_msg_blocked,
-                    mActivity.getTheme()));
-
+            controlVisibleEditTextField.setVisibility(false);
             importBtn.setEnabled(false);
             importBtn.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_import_blocked,
                     mActivity.getTheme()));
