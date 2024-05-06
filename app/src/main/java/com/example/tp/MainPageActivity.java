@@ -159,6 +159,7 @@ public class MainPageActivity extends FragmentActivity implements SetHeightMessa
             if (!fragmentTag.isEmpty()) {
                 if (checkThread()) addMessage(getString(R.string.cancel_request), null, "", false);
 
+                Fragment currentFragment = fm.getFragments().get(1);
                 Fragment fragment = null;
                 String tag = "";
 
@@ -168,6 +169,8 @@ public class MainPageActivity extends FragmentActivity implements SetHeightMessa
                         tag = "fragmentBtnTranslateContainerChooseLanguage";
                         break;
                     }
+                    case "fragmentBtnDoneText":
+                    case "fragmentBtnTonText":
                     case "fragmentBtnTranslateContainerChooseLanguage":
                     case "fragmentBtnChooseArticle":
                     case "fragmentBtnDownloadText": {
@@ -181,7 +184,13 @@ public class MainPageActivity extends FragmentActivity implements SetHeightMessa
                         break;
                     }
                     case "fragmentBtnKeyWords": {
+                        Bundle args = new Bundle();
+
+                        // save article
                         fragment = new FragmentBtnLengthText(this);
+                        args.putString("Article", currentFragment.getArguments().getString("Article"));
+                        fragment.setArguments(args);
+
                         tag = "fragmentBtnLengthText";
                         break;
                     }
@@ -204,7 +213,8 @@ public class MainPageActivity extends FragmentActivity implements SetHeightMessa
     private boolean checkThread() {
         Set<Thread> set = Thread.getAllStackTraces().keySet();
         for (Thread t: set) {
-            if (t.getName().equals("translateTextThread") || t.getName().equals("generateTextThread")) {
+            if (t.getName().equals("translateTextThread") || t.getName().equals("generateTextThread")
+                    || t.getName().equals("tonThread")) {
                 t.interrupt();
                 return true;
             }

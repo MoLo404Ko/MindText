@@ -30,6 +30,7 @@
     <string name="main">Главная</string>
     <string name="transTX">TransTX</string>
     <string name="genTX">GenTX</string>
+    <string name="sdtTX">sdtTX</string>
 
     <string name="choose_article">Выберите тему</string>
     <string name="under_generate">Выберите на какие темы будет сгенерирован текст или напишите свою</string>
@@ -55,9 +56,14 @@
 
     <string name="rus_and_eng_letters">Сообщение содержит английские и русские символовы или специальные символы</string>
     <string name="language_equals_translate">Введенный язык и язык перевода совпадают</string>
+    <string name="only_punctuation">В строке не найдены слова!</string>
 
     <string name="couldnt_download_file">Не удалось загрузить файл</string>
     <string name="external_storage_not_available">Внешнее хранилище недоступно</string>
     <string name="file_downloaded">Файл загружен в загрузки/MindText</string>
+
+    <string name="identify_ton_text">Определение тональности</string>
+    <string name="under_text_for_ton">Напишите текст или загрузите файл</string>
+    <string name="start_ton">Приступим! Напишите текст или вставьте файл</string>
 
 </resources>

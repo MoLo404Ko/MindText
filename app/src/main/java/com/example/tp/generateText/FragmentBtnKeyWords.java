@@ -3,6 +3,9 @@ package com.example.tp.generateText;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +55,7 @@ public class FragmentBtnKeyWords extends ClassWorkingWithNN {
     }
 
     private void init() {
-        super.onClickSendMsg(mActivity, addMessage, this, "fragmentBtnKeyWords");
+        super.onClickSendMsg(mActivity, addMessage, this);
         controlVisibleEditTextField.setVisibility(true);
     }
 
@@ -76,5 +79,10 @@ public class FragmentBtnKeyWords extends ClassWorkingWithNN {
         es.shutdown();
 
         return future.get();
+    }
+
+    @Override
+    public void controlUiComponents(boolean isVisible) {
+        controlVisibleEditTextField.setVisibility(isVisible);
     }
 }

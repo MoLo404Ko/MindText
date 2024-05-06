@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutionException;
 
 public abstract class ClassWorkingWithNN extends MainHandler {
     public abstract String requestToServer(String data) throws ExecutionException, InterruptedException;
+    public abstract void controlUiComponents(boolean isVisible);
 
     /**
      * Handler of clicking on send btn
@@ -17,7 +18,7 @@ public abstract class ClassWorkingWithNN extends MainHandler {
      * @param mActivity - main activity
      * @param addMessage - interface
      */
-    protected void onClickSendMsg(Activity mActivity, AddMessage addMessage, Fragment fragment, String tag) {
+    protected void onClickSendMsg(Activity mActivity, AddMessage addMessage, Fragment fragment) {
         super.onClickSendMsg(mActivity, addMessage, fragment);
     }
 

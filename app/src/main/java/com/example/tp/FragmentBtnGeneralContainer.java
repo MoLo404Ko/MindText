@@ -18,6 +18,7 @@ import com.example.tp.interfaces.AddMessage;
 import com.example.tp.interfaces.ControlVisibleEditTextField;
 import com.example.tp.interfaces.SetActionBar;
 import com.example.tp.interfaces.SetHeightMessageContainer;
+import com.example.tp.tonText.FragmentBtnTonText;
 import com.example.tp.translateText.FragmentBtnTranslateContainerChooseLanguage;
 
 public class FragmentBtnGeneralContainer extends Fragment {
@@ -48,15 +49,13 @@ public class FragmentBtnGeneralContainer extends Fragment {
 
         init(view);
 
-        onClickGenerateText(view);
-        onClickTranslateText(view);
-
-
         return view;
     }
 
     private void init(View view) {
+        onClickTranslateText(view);
         onClickGenerateText(view);
+        onClickTonText(view);
         setActionBar.setActionBar(getString(R.string.main), false);
         controlVisibleEditTextField.setVisibility(false);
     }
@@ -93,6 +92,25 @@ public class FragmentBtnGeneralContainer extends Fragment {
             view.post(() -> {
                 addMessage.addMessage(text1,new FragmentBtnTranslateContainerChooseLanguage(mActivity),
                         "fragmentBtnTranslateContainerChooseLanguage",
+                        true);
+                addMessage.addMessage(text2, null, "",false);
+            });
+        });
+    }
+
+    /**
+     * Go to identify tonality of text
+     * @param view - layout
+     */
+    private void onClickTonText(View view) {
+        AppCompatButton tonBtn = view.findViewById(R.id.ton_text);
+        tonBtn.setOnClickListener(v -> {
+            String text1 = getResources().getString(R.string.ton_text);
+            String text2 = getResources().getString(R.string.start_ton);
+
+            view.post(() -> {
+                addMessage.addMessage(text1,new FragmentBtnTonText(mActivity),
+                        "fragmentBtnTonText",
                         true);
                 addMessage.addMessage(text2, null, "",false);
             });

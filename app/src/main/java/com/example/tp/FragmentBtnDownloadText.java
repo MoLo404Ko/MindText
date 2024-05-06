@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +25,12 @@ import java.io.IOException;
 
 public class FragmentBtnDownloadText extends Fragment {
     private final Activity mActivity;
+    private String prevFragment;
     private ControlVisibleEditTextField controlVisibleEditTextField;
 
-    public FragmentBtnDownloadText(Activity mActivity) {
+    public FragmentBtnDownloadText(Activity mActivity, String prevFragment) {
         this.mActivity = mActivity;
+        this.prevFragment = prevFragment;
     }
 
     @Nullable
@@ -66,23 +69,27 @@ public class FragmentBtnDownloadText extends Fragment {
                     file.mkdirs();
 
                 new Thread(() -> {
+                    String fileName = "";
                     FileOutputStream fos = null;
-                    File textFile = new File(file.getAbsolutePath() +  "/" + Constants.TRANSLATE_TEXT_FILE);
+                    Log.d("MyLog", prevFragment);
+
+                    switch (prevFragment) {
+                        case "fragmentBtnTextForTranslateContainer":
+                            fileName = Constants.TRANSLATE_TEXT_FILE;
+                            break;
+                        case "fragmentBtnKeyWords":
+                            fileName = Constants.GENERATE_TEXT_FILE;
+                            break;
+                    }
+
+                    File textFile = new File(file.getAbsolutePath() +  "/" + fileName);
 
                     try {
-                        if (textFile.createNewFile()) {
-                            assert this.getArguments() != null;
-                            String content = this.getArguments().getString(Constants.KEY_TEXT);
+                        assert this.getArguments() != null;
+                        String content = this.getArguments().getString(Constants.KEY_TEXT);
 
-                            fos = new FileOutputStream(textFile);
-                            fos.write(content.getBytes());
-                        }
-                        else {
-                            Handler handler = new Handler(Looper.getMainLooper());
-                            handler.post(() -> {
-                                Toast.makeText(mActivity, getString(R.string.couldnt_download_file), Toast.LENGTH_SHORT).show();
-                            });
-                        }
+                        fos = new FileOutputStream(textFile);
+                        fos.write(content.getBytes());
                     } catch (IOException e) {
                         e.printStackTrace();
                     } finally {
@@ -109,6 +116,4 @@ public class FragmentBtnDownloadText extends Fragment {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
     }
-
-
 }

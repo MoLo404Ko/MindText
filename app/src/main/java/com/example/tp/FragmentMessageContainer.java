@@ -50,7 +50,7 @@ public class FragmentMessageContainer extends Fragment {
      * @param user - message from user or AI
      */
     public void addMessage(String text_msg, boolean user) {
-        if (mainMessageLayout.getChildCount() >= 20 && !getLastMessage().equals("ready")) {
+        if (mainMessageLayout.getChildCount() >= 20 && !getLastMessage().equals("Готово")) {
             mainMessageLayout.removeAllViews();
             messages.clear();
         }
