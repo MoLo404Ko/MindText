@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
 
+import com.example.tp.findObjectsText.FragmentBtnFindObjectsText;
 import com.example.tp.generateText.FragmentBtnKeyWords;
 import com.example.tp.generateText.FragmentBtnLengthText;
 import com.example.tp.interfaces.AddMessage;
@@ -64,7 +65,10 @@ public class MainHandler extends Fragment {
                         }
                         break;
                     case "fragmentBtnTonText":
-                        handlerOfSendMessageForTon(fragment, message, addMessage, mActivity);
+                        handlerOfSendMessageForTon(fragment, message, addMessage);
+                        break;
+                    case "fragmentBtnFindObjectsText":
+                        handlerOfSendMessageForFindObjects(fragment, message, addMessage, mActivity);
                         break;
                 }
 
@@ -184,9 +188,9 @@ public class MainHandler extends Fragment {
         boolean rusLanguage = false;
         boolean notLetter = false;
 
-        String notLetterRegex = "[\\d.!?-]+";
-        String rusRegex = "[а-яА-Я[.!?-]]+";
-        String engRegex = "[a-zA-Z[.!?-]]+";
+        String notLetterRegex = "[\\d.!:?-]+";
+        String rusRegex = "[а-яА-Я[.!:?-]]+";
+        String engRegex = "[a-zA-Z[.!:?-]]+";
 
         message = message.replaceAll("\\s", "");
 
@@ -215,7 +219,7 @@ public class MainHandler extends Fragment {
     }
 
     /**
-     * Handler of sending message from input fields for generate
+     * Handler of sending message for generate
      * @param fragment - current fragment
      * @param message - key words for generate
      * @param addMessage - interface
@@ -254,8 +258,14 @@ public class MainHandler extends Fragment {
         }
     }
 
+    /**
+     * Handler of sending message for indetify tonality
+     * @param fragment
+     * @param message
+     * @param addMessage
+     */
     protected void handlerOfSendMessageForTon(Fragment fragment, String message,
-                                              AddMessage addMessage, Activity mActivity) {
+                                              AddMessage addMessage) {
         Runnable runnable = () -> {
             try {
                 Handler handler = new Handler(Looper.getMainLooper());
@@ -283,7 +293,7 @@ public class MainHandler extends Fragment {
             }
         };
 
-        Thread thread = new Thread(runnable, "tonThread");
+        Thread thread = new Thread(runnable, "findObjectsThread");
         if (checkSymbols(message)) {
             thread.start();
             addMessage.addMessage(getResources().getString(R.string.request_processing), null, "", false);
@@ -300,9 +310,9 @@ public class MainHandler extends Fragment {
         boolean rusLanguage = false;
         boolean notLetter = false;
 
-        String notLetterRegex = "[\\d.!?-]+";
-        String rusRegex = "[а-яА-Я\\d[.!?-]]+";
-        String engRegex = "[a-zA-Z\\d[.!?-]]+";
+        String notLetterRegex = "[\\d.!:?-]+";
+        String rusRegex = "[а-яА-Я\\d[.!:?-]]+";
+        String engRegex = "[a-zA-Z\\d[.!:?-]]+";
 
         message = message.replaceAll("\\s", "");
 
@@ -320,5 +330,40 @@ public class MainHandler extends Fragment {
         }
 
         return true;
+    }
+
+
+    protected void handlerOfSendMessageForFindObjects(Fragment fragment, String message,
+                                              AddMessage addMessage, Activity mActivity) {
+        Runnable runnable = () -> {
+            try {
+                Handler handler = new Handler(Looper.getMainLooper());
+
+                handler.post(() -> {
+                    ((FragmentBtnFindObjectsText) fragment).controlUiComponents(false);
+                });
+
+                String answer;
+                answer = ((FragmentBtnFindObjectsText)fragment).requestToServer(message);
+                answer = ((FragmentBtnFindObjectsText)fragment).clearAnswer(answer);
+
+                handler.post(() -> {
+                    ((FragmentBtnFindObjectsText)fragment).controlUiComponents(false);
+                });
+
+                addAnswerOnUIThread(addMessage, answer, new FragmentBtnDownloadText(mActivity,
+                        fragment.getTag()));
+
+                Log.d("MyLog", answer);
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
+
+        Thread thread = new Thread(runnable, "findObjectsThread");
+        if (checkSymbols(message)) {
+            thread.start();
+            addMessage.addMessage(getResources().getString(R.string.request_processing), null, "", false);
+        }
     }
 }

@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.tp.findObjectsText.FragmentBtnFindObjectsText;
+import com.example.tp.findObjectsText.FragmentBtnObjects;
 import com.example.tp.generateText.FragmentBtnChooseArticle;
 import com.example.tp.interfaces.AddMessage;
 import com.example.tp.interfaces.ControlVisibleEditTextField;
@@ -56,6 +58,7 @@ public class FragmentBtnGeneralContainer extends Fragment {
         onClickTranslateText(view);
         onClickGenerateText(view);
         onClickTonText(view);
+        onClickFindObjectsText(view);
         setActionBar.setActionBar(getString(R.string.main), false);
         controlVisibleEditTextField.setVisibility(false);
     }
@@ -67,12 +70,11 @@ public class FragmentBtnGeneralContainer extends Fragment {
     private void onClickGenerateText(View view) {
         AppCompatButton generateBtn = view.findViewById(R.id.generate_text);
         generateBtn.setOnClickListener(v -> {
-            String text1 = getResources().getString(R.string.generate_text_msg);
-            String text2 = getResources().getString(R.string.start_generate_msg);
-
             view.post(() -> {
-                addMessage.addMessage(text1, null, "", true);
-                addMessage.addMessage(text2, new FragmentBtnChooseArticle(mActivity),
+                addMessage.addMessage(getResources().getString(R.string.generate_text_msg),
+                        null, "", true);
+                addMessage.addMessage(getResources().getString(R.string.start_generate_msg),
+                        new FragmentBtnChooseArticle(mActivity),
                         "fragmentBtnChooseArticle",false);
             });
         });
@@ -86,14 +88,12 @@ public class FragmentBtnGeneralContainer extends Fragment {
         AppCompatButton translateBtn = view.findViewById(R.id.translate_text);
 
         translateBtn.setOnClickListener(v -> {
-            String text1 = getResources().getString(R.string.translate_text);
-            String text2 = getResources().getString(R.string.start_translate);
-
             view.post(() -> {
-                addMessage.addMessage(text1,new FragmentBtnTranslateContainerChooseLanguage(mActivity),
-                        "fragmentBtnTranslateContainerChooseLanguage",
-                        true);
-                addMessage.addMessage(text2, null, "",false);
+                addMessage.addMessage(getResources().getString(R.string.translate_text),
+                        new FragmentBtnTranslateContainerChooseLanguage(mActivity),
+                        "fragmentBtnTranslateContainerChooseLanguage", true);
+                addMessage.addMessage(getResources().getString(R.string.start_translate),
+                        null, "",false);
             });
         });
     }
@@ -105,15 +105,27 @@ public class FragmentBtnGeneralContainer extends Fragment {
     private void onClickTonText(View view) {
         AppCompatButton tonBtn = view.findViewById(R.id.ton_text);
         tonBtn.setOnClickListener(v -> {
-            String text1 = getResources().getString(R.string.ton_text);
-            String text2 = getResources().getString(R.string.start_ton);
-
             view.post(() -> {
-                addMessage.addMessage(text1,new FragmentBtnTonText(mActivity),
-                        "fragmentBtnTonText",
-                        true);
-                addMessage.addMessage(text2, null, "",false);
+                addMessage.addMessage(getResources().getString(R.string.ton_text),
+                        new FragmentBtnTonText(mActivity),
+                        "fragmentBtnTonText", true);
+                addMessage.addMessage(getResources().getString(R.string.start_ton),
+                        null, "",false);
             });
+        });
+    }
+
+    /**
+     * Go to find objects
+     * @param view - layout
+     */
+    private void onClickFindObjectsText(View view) {
+        AppCompatButton findObjectsBtn = view.findViewById(R.id.find_objects);
+        findObjectsBtn.setOnClickListener(v -> {
+            addMessage.addMessage(getResources().getString(R.string.find_objects_text),
+                    new FragmentBtnObjects(mActivity), "fragmentBtnObjects", true);
+            addMessage.addMessage(getResources().getString(R.string.start_objects_find),
+                    null, "", false);
         });
     }
 }

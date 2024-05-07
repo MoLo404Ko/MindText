@@ -4,11 +4,13 @@ public class Constants {
     public static final String APP_NAME = "MindText";
     public static final String TRANSLATE_TEXT_FILE = "translatedText.txt";
     public static final String GENERATE_TEXT_FILE = "generatedText.txt";
+    public static final String FIND_OBJECTS_TEXT_FILE = "names.txt";
     public static final String KEY_TEXT = "TextKey";
     public static final String KEY_LANGUAGE = "LanguageKey";
     public static final String TRANSLATE_SCRIPT_PATH = "https://practicenn.ru/translate.php";
     public static final String GENERATE_SCRIPT_PATH = "https://practicenn.ru/generate.php";
     public static final String TON_SCRIPT_PATH = "https://practicenn.ru/ton.php";
+    public static final String FIND_OBJECT_SCRIPT_PATH = "https://practicenn.ru/findObjects.php";
 
 
     /**

@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.tp.findObjectsText.FragmentBtnObjects;
 import com.example.tp.generateText.FragmentBtnChooseArticle;
 import com.example.tp.generateText.FragmentBtnLengthText;
 import com.example.tp.interfaces.AddMessage;
@@ -169,6 +170,7 @@ public class MainPageActivity extends FragmentActivity implements SetHeightMessa
                         tag = "fragmentBtnTranslateContainerChooseLanguage";
                         break;
                     }
+                    case "fragmentBtnObjects":
                     case "fragmentBtnDoneText":
                     case "fragmentBtnTonText":
                     case "fragmentBtnTranslateContainerChooseLanguage":
@@ -194,6 +196,12 @@ public class MainPageActivity extends FragmentActivity implements SetHeightMessa
                         tag = "fragmentBtnLengthText";
                         break;
                     }
+                    case "fragmentBtnFindObjectsText": {
+                        fragment = new FragmentBtnObjects(this);
+                        tag = "fragmentBtnObjects";
+
+                        break;
+                    }
 
                 }
 
@@ -213,8 +221,9 @@ public class MainPageActivity extends FragmentActivity implements SetHeightMessa
     private boolean checkThread() {
         Set<Thread> set = Thread.getAllStackTraces().keySet();
         for (Thread t: set) {
-            if (t.getName().equals("translateTextThread") || t.getName().equals("generateTextThread")
-                    || t.getName().equals("tonThread")) {
+            String threadName = t.getName();
+            if (threadName.equals("translateTextThread") || threadName.equals("generateTextThread")
+                    || threadName.equals("tonThread") || threadName.equals("findObjectsThread")) {
                 t.interrupt();
                 return true;
             }

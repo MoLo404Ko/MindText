@@ -80,6 +80,9 @@ public class FragmentBtnDownloadText extends Fragment {
                         case "fragmentBtnKeyWords":
                             fileName = Constants.GENERATE_TEXT_FILE;
                             break;
+                        case "fragmentBtnFindObjectsText":
+                            fileName = Constants.FIND_OBJECTS_TEXT_FILE;
+                            break;
                     }
 
                     File textFile = new File(file.getAbsolutePath() +  "/" + fileName);

@@ -10,10 +10,10 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Callable;
 
-public class GetAnswerTonFromServer implements Callable<String> {
+public class GetAnswerTonFromServerTask implements Callable<String> {
     private String text;
 
-    public GetAnswerTonFromServer(String text) {
+    public GetAnswerTonFromServerTask(String text) {
         this.text = text;
     }
 
