@@ -63,7 +63,6 @@ public class FragmentBtnObjects extends Fragment {
     private void onBtnClick(View view) {
         AppCompatButton companiesBtn = view.findViewById(R.id.company_btn);
         AppCompatButton namesBtn = view.findViewById(R.id.names_btn);
-        AppCompatButton animalNamesBtn = view.findViewById(R.id.animal_names);
         AppCompatButton locationsBtn = view.findViewById(R.id.locationsBtn);
 
 
@@ -73,10 +72,6 @@ public class FragmentBtnObjects extends Fragment {
 
         namesBtn.setOnClickListener(v -> {
             goToNextFragment(getString(R.string.names));
-        });
-
-        animalNamesBtn.setOnClickListener(v -> {
-            goToNextFragment(getString(R.string.animal_names));
         });
 
         locationsBtn.setOnClickListener(v -> {

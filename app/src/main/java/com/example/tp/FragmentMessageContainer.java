@@ -55,10 +55,7 @@ public class FragmentMessageContainer extends Fragment {
 
         if (mainMessageLayout.getChildCount() >= 20 && !getLastMessage().equals("Готово!")) {
             mainMessageLayout.removeAllViews();
-            for (String m: messages)
-                Log.d("MyLog", m);
             messages.clear();
-            messages.add("Очистка сообщений");
         }
 
         Context context = view.getContext();
