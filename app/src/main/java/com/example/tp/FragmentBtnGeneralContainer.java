@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.tp.emotionsText.FragmentBtnEmotions;
 import com.example.tp.findObjectsText.FragmentBtnFindObjectsText;
 import com.example.tp.findObjectsText.FragmentBtnObjects;
 import com.example.tp.generateText.FragmentBtnChooseArticle;
@@ -59,6 +60,7 @@ public class FragmentBtnGeneralContainer extends Fragment {
         onClickGenerateText(view);
         onClickTonText(view);
         onClickFindObjectsText(view);
+        onClickIdentifyEmotionsText(view);
         setActionBar.setActionBar(getString(R.string.main), false);
         controlVisibleEditTextField.setVisibility(false);
     }
@@ -126,6 +128,17 @@ public class FragmentBtnGeneralContainer extends Fragment {
                     new FragmentBtnObjects(mActivity), "fragmentBtnObjects", true);
             addMessage.addMessage(getResources().getString(R.string.start_objects_find),
                     null, "", false);
+        });
+    }
+
+    private void onClickIdentifyEmotionsText(View view) {
+        AppCompatButton emotionsBtn = view.findViewById(R.id.emotion_text);
+
+        emotionsBtn.setOnClickListener(v -> {
+            addMessage.addMessage(getString(R.string.emotional_text), null,
+                    "", true);
+            addMessage.addMessage(getString(R.string.write_text_or_download),
+                    new FragmentBtnEmotions(mActivity), "fragmentBtnEmotions", false);
         });
     }
 }

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -65,7 +66,7 @@ public class FragmentBtnKeyWords extends ClassWorkingWithNN {
      * @return text from server
      */
     @Override
-    public String requestToServer(String keyWords) throws ExecutionException, InterruptedException {
+    public String requestToServer(String keyWords) throws InterruptedException {
         Bundle args = this.getArguments();
 
         assert args != null;
@@ -78,7 +79,14 @@ public class FragmentBtnKeyWords extends ClassWorkingWithNN {
         Future<String> future = es.submit(new GetAnswerGenerateFromServerTask(promptText));
         es.shutdown();
 
-        return future.get();
+        try {
+            return future.get();
+        } catch (ExecutionException e) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(() -> Toast.makeText(mActivity,
+                    getString(R.string.cant_connect), Toast.LENGTH_SHORT).show());
+        }
+        return "";
     }
 
     @Override

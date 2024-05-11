@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,9 +51,14 @@ public class FragmentMessageContainer extends Fragment {
      * @param user - message from user or AI
      */
     public void addMessage(String text_msg, boolean user) {
-        if (mainMessageLayout.getChildCount() >= 20 && !getLastMessage().equals("Готово")) {
+        messages.add(text_msg);
+
+        if (mainMessageLayout.getChildCount() >= 20 && !getLastMessage().equals("Готово!")) {
             mainMessageLayout.removeAllViews();
+            for (String m: messages)
+                Log.d("MyLog", m);
             messages.clear();
+            messages.add("Очистка сообщений");
         }
 
         Context context = view.getContext();
@@ -101,7 +107,6 @@ public class FragmentMessageContainer extends Fragment {
             messageLayout.addView(message);
         }
 
-        messages.add(text_msg);
         mainMessageLayout.addView(messageLayout);
     }
 

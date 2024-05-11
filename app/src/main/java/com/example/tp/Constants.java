@@ -11,6 +11,7 @@ public class Constants {
     public static final String GENERATE_SCRIPT_PATH = "https://practicenn.ru/generate.php";
     public static final String TON_SCRIPT_PATH = "https://practicenn.ru/ton.php";
     public static final String FIND_OBJECT_SCRIPT_PATH = "https://practicenn.ru/findObjects.php";
+    public static final String IDENTIFY_EMOTIONS_SCRIPT_PATH = "https://practicenn.ru/identifyEmotions.php";
 
 
     /**

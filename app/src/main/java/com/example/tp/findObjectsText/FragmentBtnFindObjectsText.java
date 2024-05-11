@@ -5,9 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -76,7 +79,7 @@ public class FragmentBtnFindObjectsText extends ClassWorkingWithNN {
      * @return - objects
      */
     @Override
-    public String requestToServer(String data) throws ExecutionException, InterruptedException {
+    public String requestToServer(String data) throws InterruptedException {
         Bundle args = this.getArguments();
 
         assert args != null;
@@ -87,7 +90,15 @@ public class FragmentBtnFindObjectsText extends ClassWorkingWithNN {
         Future<String> future = es.submit(new GetAnswerFromFindObjectsServerTask(object, data));
         es.shutdown();
 
-        return future.get();
+        try {
+            return future.get();
+        } catch (ExecutionException e) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(() -> Toast.makeText(mActivity, getString(R.string.cant_connect),
+                    Toast.LENGTH_SHORT).show());
+        }
+
+        return "";
     }
 
     /**

@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
 
+import com.example.tp.emotionsText.FragmentBtnEmotions;
 import com.example.tp.findObjectsText.FragmentBtnFindObjectsText;
 import com.example.tp.generateText.FragmentBtnKeyWords;
 import com.example.tp.generateText.FragmentBtnLengthText;
@@ -69,6 +70,9 @@ public class MainHandler extends Fragment {
                         break;
                     case "fragmentBtnFindObjectsText":
                         handlerOfSendMessageForFindObjects(fragment, message, addMessage, mActivity);
+                        break;
+                    case "fragmentBtnEmotions":
+                        handlerOfSendMessageForEmotions(fragment, message, addMessage, mActivity);
                         break;
                 }
 
@@ -157,14 +161,20 @@ public class MainHandler extends Fragment {
                     answer = ((FragmentBtnTextForTranslateContainer)fragment).requestToServer(message);
                     answer = ((FragmentBtnTextForTranslateContainer) fragment).clearAnswer(answer);
 
-                    handler.post(() -> {
-                        ((FragmentBtnTextForTranslateContainer) fragment).controlUiComponents(true);
-                    });
+                    if (!answer.isEmpty()) {
+                        handler.post(() -> {
+                            ((FragmentBtnTextForTranslateContainer) fragment).controlUiComponents(true);
+                        });
 
-                    addAnswerOnUIThread(addMessage, answer, new FragmentBtnDownloadText(mActivity,
-                            fragment.getTag()));
+                        addAnswerOnUIThread(addMessage, answer, new FragmentBtnDownloadText(mActivity,
+                                fragment.getTag()));
+                    }
+                    else {
+                        handler.post(() ->
+                                ((FragmentBtnTextForTranslateContainer) fragment).controlUiComponents(true));
+                    }
 
-                } catch (ExecutionException | InterruptedException e) {
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             };
@@ -188,9 +198,9 @@ public class MainHandler extends Fragment {
         boolean rusLanguage = false;
         boolean notLetter = false;
 
-        String notLetterRegex = "[\\d.!:?-]+";
-        String rusRegex = "[а-яА-Я[.!:?-]]+";
-        String engRegex = "[a-zA-Z[.!:?-]]+";
+        String notLetterRegex = "[\\d.!';,:?-]+";
+        String rusRegex = "[а-яА-Я[.!,';:?-]]+";
+        String engRegex = "[a-zA-Z[.!,';:?-]]+";
 
         message = message.replaceAll("\\s", "");
 
@@ -225,28 +235,32 @@ public class MainHandler extends Fragment {
      * @param addMessage - interface
      * @param mActivity - main activity
      */
-    private void handlerOfSendMessageForGenerate(Fragment fragment, String message,
+    protected void handlerOfSendMessageForGenerate(Fragment fragment, String message,
                                                  AddMessage addMessage, Activity mActivity) {
         Runnable runnable = () -> {
             String answer;
             Handler handler = new Handler(Looper.getMainLooper());
 
             try {
-                handler.post(() -> {
-                    ((FragmentBtnKeyWords)fragment).controlUiComponents(false);
-                });
+                handler.post(() ->
+                    ((FragmentBtnKeyWords)fragment).controlUiComponents(false));
 
                 answer = ((FragmentBtnKeyWords)fragment).requestToServer(message);
                 answer = ((FragmentBtnKeyWords) fragment).clearAnswer(answer);
 
-                handler.post(() -> {
-                    ((FragmentBtnKeyWords)fragment).controlUiComponents(false);
-                });
+                if (!answer.isEmpty()) {
+                    handler.post(() ->
+                        ((FragmentBtnKeyWords)fragment).controlUiComponents(false));
 
-                addAnswerOnUIThread(addMessage, answer, new FragmentBtnDownloadText(mActivity,
-                        fragment.getTag()));
+                    addAnswerOnUIThread(addMessage, answer, new FragmentBtnDownloadText(mActivity,
+                            fragment.getTag()));
+                }
+                else {
+                    handler.post(() ->
+                            ((FragmentBtnKeyWords) fragment).controlUiComponents(true));
+                }
 
-            } catch (ExecutionException | InterruptedException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         };
@@ -260,9 +274,9 @@ public class MainHandler extends Fragment {
 
     /**
      * Handler of sending message for indetify tonality
-     * @param fragment
-     * @param message
-     * @param addMessage
+     * @param fragment - current fragment
+     * @param message - message from text file or input field
+     * @param addMessage - interface
      */
     protected void handlerOfSendMessageForTon(Fragment fragment, String message,
                                               AddMessage addMessage) {
@@ -278,17 +292,21 @@ public class MainHandler extends Fragment {
                 answer = ((FragmentBtnTonText)fragment).requestToServer(message);
                 answer = ((FragmentBtnTonText)fragment).clearAnswer(answer);
 
-                String finalAnswer = answer;
+                if (!answer.isEmpty()) {
+                    String finalAnswer = answer;
 
-                handler.post(() -> {
-                    addMessage.addMessage(finalAnswer, null, "", false);
-                    addMessage.addMessage(getString(R.string.done), new FragmentBtnDoneText(),
-                            "fragmentBtnDoneText", false);
-                    ((FragmentBtnTonText) fragment).controlUiComponents(true);
-                });
-
-                Log.d("MyLog", answer);
-            } catch (ExecutionException | InterruptedException e) {
+                    handler.post(() -> {
+                        addMessage.addMessage(finalAnswer, null, "", false);
+                        addMessage.addMessage(getString(R.string.done), new FragmentBtnDoneText(),
+                                "fragmentBtnDoneText", false);
+                        ((FragmentBtnTonText) fragment).controlUiComponents(true);
+                    });
+                }
+                else {
+                    handler.post(() ->
+                        ((FragmentBtnTonText) fragment).controlUiComponents(true));
+                }
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         };
@@ -310,9 +328,9 @@ public class MainHandler extends Fragment {
         boolean rusLanguage = false;
         boolean notLetter = false;
 
-        String notLetterRegex = "[\\d.!:?-]+";
-        String rusRegex = "[а-яА-Я\\d[.!:?-]]+";
-        String engRegex = "[a-zA-Z\\d[.!:?-]]+";
+        String notLetterRegex = "[\\d.!,:?-]+";
+        String rusRegex = "[а-яА-Я\\d[.!,:?-]]+";
+        String engRegex = "[a-zA-Z\\d[.!,:?-]]+";
 
         message = message.replaceAll("\\s", "");
 
@@ -332,7 +350,12 @@ public class MainHandler extends Fragment {
         return true;
     }
 
-
+    /**
+     * Handler of sending message for find objects
+     * @param fragment - current fragment
+     * @param message - message from text file or input field
+     * @param addMessage - interface
+     */
     protected void handlerOfSendMessageForFindObjects(Fragment fragment, String message,
                                               AddMessage addMessage, Activity mActivity) {
         Runnable runnable = () -> {
@@ -347,15 +370,19 @@ public class MainHandler extends Fragment {
                 answer = ((FragmentBtnFindObjectsText)fragment).requestToServer(message);
                 answer = ((FragmentBtnFindObjectsText)fragment).clearAnswer(answer);
 
-                handler.post(() -> {
-                    ((FragmentBtnFindObjectsText)fragment).controlUiComponents(false);
-                });
-
-                addAnswerOnUIThread(addMessage, answer, new FragmentBtnDownloadText(mActivity,
-                        fragment.getTag()));
+                if (!answer.isEmpty()) {
+                    handler.post(() ->
+                        ((FragmentBtnFindObjectsText)fragment).controlUiComponents(false));
+                    addAnswerOnUIThread(addMessage, answer, new FragmentBtnDownloadText(mActivity,
+                            fragment.getTag()));
+                }
+                else {
+                    handler.post(() ->
+                            ((FragmentBtnFindObjectsText) fragment).controlUiComponents(true));
+                }
 
                 Log.d("MyLog", answer);
-            } catch (ExecutionException | InterruptedException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         };
@@ -366,4 +393,59 @@ public class MainHandler extends Fragment {
             addMessage.addMessage(getResources().getString(R.string.request_processing), null, "", false);
         }
     }
+    /**
+     *
+     * Handler of sending message for find emotions
+     * @param fragment - current fragment
+     * @param message - message from text file or input field
+     * @param addMessage - interface
+     * @param mActivity - main page
+     */
+    protected void handlerOfSendMessageForEmotions(Fragment fragment, String message,
+                                                   AddMessage addMessage, Activity mActivity) {
+        Runnable runnable = () -> {
+            try {
+                Handler handler = new Handler(Looper.getMainLooper());
+
+                handler.post(() -> {
+                    ((FragmentBtnEmotions) fragment).controlUiComponents(false);
+                });
+
+                String answer;
+                answer = ((FragmentBtnEmotions)fragment).requestToServer(message);
+                answer = ((FragmentBtnEmotions)fragment).clearAnswer(answer);
+
+                if (!answer.isEmpty()) {
+                    handler.post(() -> {
+                        ((FragmentBtnEmotions)fragment).controlUiComponents(false);
+                    });
+
+                    String finalAnswer = answer;
+
+                    handler.post(() -> {
+                        addMessage.addMessage(finalAnswer, null, "", false);
+                        addMessage.addMessage(getString(R.string.done), new FragmentBtnDoneText(),
+                                "fragmentBtnDoneText", false);
+                        ((FragmentBtnEmotions) fragment).controlUiComponents(true);
+                    });
+                }
+                else {
+                    handler.post(() ->
+                            ((FragmentBtnEmotions) fragment).controlUiComponents(true));
+                }
+
+                Log.d("MyLog", answer);
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
+
+        Thread thread = new Thread(runnable, "emotionsThread");
+        if (checkSymbols(message)) {
+            thread.start();
+            addMessage.addMessage(getResources().getString(R.string.request_processing), null, "", false);
+        }
+    }
+
+
 }

@@ -5,9 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -151,12 +155,22 @@ public class FragmentBtnTonText extends ClassWorkingWithNN {
      * @return - text from server
      */
     @Override
-    public String requestToServer(String data) throws ExecutionException, InterruptedException {
+    public String requestToServer(String data) throws InterruptedException {
         ExecutorService es = Executors.newSingleThreadExecutor();
         Future<String> future = es.submit(new GetAnswerTonFromServerTask(data));
 
         es.shutdown();
-        return future.get();
+
+        try {
+            return future.get();
+        } catch (ExecutionException e) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(() -> {
+                Toast.makeText(mActivity, getString(R.string.cant_connect), Toast.LENGTH_SHORT).show();
+            });
+        }
+
+        return "";
     }
 
     /**

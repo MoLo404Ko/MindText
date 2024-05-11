@@ -1,4 +1,4 @@
-package com.example.tp.translateText;
+package com.example.tp.emotionsText;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,11 +7,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -21,16 +19,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
 
-import com.example.tp.interfaces.AddMessage;
 import com.example.tp.ClassWorkingWithNN;
-import com.example.tp.Constants;
-import com.example.tp.interfaces.ControlVisibleEditTextField;
-import com.example.tp.FragmentBtnDownloadText;
 import com.example.tp.R;
+import com.example.tp.interfaces.AddMessage;
+import com.example.tp.interfaces.ControlVisibleEditTextField;
+import com.example.tp.interfaces.SetActionBar;
 import com.example.tp.interfaces.SetHeightMessageContainer;
-import com.example.tp.server.GetAnswerTranslateFromServerTask;
+import com.example.tp.server.GetAnswerFromEmotionsServerTask;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,13 +38,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class FragmentBtnTextForTranslateContainer extends ClassWorkingWithNN {
+public class FragmentBtnEmotions extends ClassWorkingWithNN {
     private AddMessage addMessage;
     private SetHeightMessageContainer setHeightMessageContainer;
     private ControlVisibleEditTextField controlVisibleEditTextField;
-    private final Activity mActivity;
+    private SetActionBar setActionBar;
+    private Activity mActivity;
 
-    public FragmentBtnTextForTranslateContainer(Activity mActivity) {
+    public FragmentBtnEmotions(Activity mActivity) {
         this.mActivity = mActivity;
     }
 
@@ -58,12 +55,13 @@ public class FragmentBtnTextForTranslateContainer extends ClassWorkingWithNN {
         addMessage = (AddMessage) context;
         setHeightMessageContainer = (SetHeightMessageContainer) context;
         controlVisibleEditTextField = (ControlVisibleEditTextField) context;
+        setActionBar = (SetActionBar) context;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_btns_text_for_translate_container, container, false);
+        View view = inflater.inflate(R.layout.fragment_btns_indentify_emotions, container, false);
         view.post(() -> setHeightMessageContainer.setHeightMessageContainer(view.getHeight()));
 
         init(view);
@@ -71,41 +69,58 @@ public class FragmentBtnTextForTranslateContainer extends ClassWorkingWithNN {
     }
 
     private void init(View view) {
+        setActionBar.setActionBar(getString(R.string.emoTX), true);
         controlVisibleEditTextField.setVisibility(true);
         onClickSendMsg();
         onImportFile(view);
     }
 
-    /**
-     * Handler for clicking on the send button
-     */
     private void onClickSendMsg() {
         super.onClickSendMsg(mActivity, addMessage, this);
     }
 
     /**
      * Send a request to the server and waits for a response
-     * @param translateText - text for translate
-     * @return - text from server
+     * @param data - text from input field or text file
+     * @return - answer from server
      */
     @Override
-    public String requestToServer(String translateText) throws InterruptedException {
+    public String requestToServer(String data) throws ExecutionException, InterruptedException {
         ExecutorService es = Executors.newSingleThreadExecutor();
-
-        assert this.getArguments() != null;
-        Future<String> future = es.submit(new GetAnswerTranslateFromServerTask
-                (translateText, this.getArguments().getString(Constants.KEY_LANGUAGE)));
+        Future<String> future = es.submit(new GetAnswerFromEmotionsServerTask(data));
 
         es.shutdown();
+
         try {
             return future.get();
         } catch (ExecutionException e) {
             Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(() -> Toast.makeText(mActivity, getString(R.string.cant_connect),
-                    Toast.LENGTH_SHORT).show());
+            handler.post(() -> Toast.makeText(mActivity, getString(R.string.cant_connect), Toast.LENGTH_SHORT).show());
         }
 
         return "";
+    }
+
+    /**
+     * Set visible UI components after requesting to server
+     * @param isVisible - visible components
+     */
+    @Override
+    public void controlUiComponents(boolean isVisible) {
+        AppCompatButton importBtn = this.getView().findViewById(R.id.importBtn);
+
+        if (isVisible) {
+            controlVisibleEditTextField.setVisibility(true);
+            importBtn.setEnabled(true);
+            importBtn.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_import,
+                    mActivity.getTheme()));
+        }
+        else {
+            controlVisibleEditTextField.setVisibility(false);
+            importBtn.setEnabled(false);
+            importBtn.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_import_blocked,
+                    mActivity.getTheme()));
+        }
     }
 
     /**
@@ -165,35 +180,12 @@ public class FragmentBtnTextForTranslateContainer extends ClassWorkingWithNN {
             }
     );
 
-
     /**
      * Get answer from server and add on UI thread
      * @param fileText - import file text
      */
     private void getAnswerFromServer(StringBuilder fileText) {
         addMessage.addMessage(fileText.toString(), null, "",true);
-        super.handlerOfSendMessageForTranslate(this, fileText.toString(), addMessage, mActivity);
-    }
-
-
-    /**
-     * Blocking UI after sending of request
-     */
-    @Override
-    public void controlUiComponents(boolean isVisible) {
-        AppCompatButton importBtn = this.getView().findViewById(R.id.importBtn);
-
-        if (isVisible) {
-            controlVisibleEditTextField.setVisibility(true);
-            importBtn.setEnabled(true);
-            importBtn.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_import,
-                    mActivity.getTheme()));
-        }
-        else {
-            controlVisibleEditTextField.setVisibility(false);
-            importBtn.setEnabled(false);
-            importBtn.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_import_blocked,
-                    mActivity.getTheme()));
-        }
+        super.handlerOfSendMessageForEmotions(this, fileText.toString(), addMessage, mActivity);
     }
 }

@@ -57,7 +57,7 @@ public class MainPageActivity extends FragmentActivity implements SetHeightMessa
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        heightMessageContainer = displayMetrics.heightPixels - heightBtnContainer - heightBottomLayout - dpToPx(50); // 50 - margins
+        heightMessageContainer = displayMetrics.heightPixels - heightBtnContainer - heightBottomLayout - dpToPx(70); // 50 - margins
 
         /**
          * For first message create block of messages
@@ -170,6 +170,7 @@ public class MainPageActivity extends FragmentActivity implements SetHeightMessa
                         tag = "fragmentBtnTranslateContainerChooseLanguage";
                         break;
                     }
+                    case "fragmentBtnEmotions":
                     case "fragmentBtnObjects":
                     case "fragmentBtnDoneText":
                     case "fragmentBtnTonText":
@@ -202,7 +203,6 @@ public class MainPageActivity extends FragmentActivity implements SetHeightMessa
 
                         break;
                     }
-
                 }
 
                 if (fragment != null) {
@@ -223,7 +223,8 @@ public class MainPageActivity extends FragmentActivity implements SetHeightMessa
         for (Thread t: set) {
             String threadName = t.getName();
             if (threadName.equals("translateTextThread") || threadName.equals("generateTextThread")
-                    || threadName.equals("tonThread") || threadName.equals("findObjectsThread")) {
+                    || threadName.equals("tonThread") || threadName.equals("findObjectsThread")
+                    || threadName.equals("emotionsThread")) {
                 t.interrupt();
                 return true;
             }
