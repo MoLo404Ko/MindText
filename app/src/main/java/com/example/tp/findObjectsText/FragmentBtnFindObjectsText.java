@@ -18,16 +18,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
 
 import com.example.tp.ClassWorkingWithNN;
 import com.example.tp.R;
 import com.example.tp.interfaces.AddMessage;
 import com.example.tp.interfaces.ControlVisibleEditTextField;
-import com.example.tp.interfaces.SetActionBar;
 import com.example.tp.interfaces.SetHeightMessageContainer;
 import com.example.tp.server.GetAnswerFromFindObjectsServerTask;
-import com.example.tp.server.GetAnswerGenerateFromServerTask;
 
 import java.io.BufferedReader;
 import java.io.IOException;

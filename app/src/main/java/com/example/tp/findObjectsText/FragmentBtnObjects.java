@@ -23,7 +23,7 @@ public class FragmentBtnObjects extends Fragment {
     private SetHeightMessageContainer setHeightMessageContainer;
     private ControlVisibleEditTextField controlVisibleEditTextField;
     private SetActionBar setActionBar;
-    private Activity mActivity;
+    private final Activity mActivity;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -65,18 +65,9 @@ public class FragmentBtnObjects extends Fragment {
         AppCompatButton namesBtn = view.findViewById(R.id.names_btn);
         AppCompatButton locationsBtn = view.findViewById(R.id.locationsBtn);
 
-
-        companiesBtn.setOnClickListener(v -> {
-            goToNextFragment(getString(R.string.company));
-        });
-
-        namesBtn.setOnClickListener(v -> {
-            goToNextFragment(getString(R.string.names));
-        });
-
-        locationsBtn.setOnClickListener(v -> {
-            goToNextFragment(getString(R.string.locations));
-        });
+        companiesBtn.setOnClickListener(v -> goToNextFragment(getString(R.string.company)));
+        namesBtn.setOnClickListener(v -> goToNextFragment(getString(R.string.names)));
+        locationsBtn.setOnClickListener(v -> goToNextFragment(getString(R.string.locations)));
     }
 
     /**

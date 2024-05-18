@@ -7,11 +7,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -19,15 +17,12 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
 
 import com.example.tp.interfaces.AddMessage;
 import com.example.tp.ClassWorkingWithNN;
 import com.example.tp.Constants;
 import com.example.tp.interfaces.ControlVisibleEditTextField;
-import com.example.tp.FragmentBtnDownloadText;
 import com.example.tp.R;
 import com.example.tp.interfaces.SetHeightMessageContainer;
 import com.example.tp.server.GetAnswerTranslateFromServerTask;

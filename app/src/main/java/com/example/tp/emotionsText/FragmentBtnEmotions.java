@@ -21,6 +21,7 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.example.tp.ClassWorkingWithNN;
+import com.example.tp.GigaChatModelClass;
 import com.example.tp.R;
 import com.example.tp.interfaces.AddMessage;
 import com.example.tp.interfaces.ControlVisibleEditTextField;

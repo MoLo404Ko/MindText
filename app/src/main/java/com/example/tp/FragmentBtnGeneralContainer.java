@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.tp.emotionsText.FragmentBtnEmotions;
-import com.example.tp.findObjectsText.FragmentBtnFindObjectsText;
 import com.example.tp.findObjectsText.FragmentBtnObjects;
 import com.example.tp.generateText.FragmentBtnChooseArticle;
 import com.example.tp.interfaces.AddMessage;

@@ -60,15 +60,9 @@ public class FragmentBtnLengthText extends Fragment {
         AppCompatButton lessTwentyFive = view.findViewById(R.id.lessTwentyFive);
         AppCompatButton lessFifty = view.findViewById(R.id.lessFifty);
 
-        lessTen.setOnClickListener(v -> {
-            goToFragmentKeyWords(getResources().getString(R.string.less_10));
-        });
-        lessTwentyFive.setOnClickListener(v -> {
-            goToFragmentKeyWords(getResources().getString(R.string.less_25));
-        });
-        lessFifty.setOnClickListener(v -> {
-            goToFragmentKeyWords(getResources().getString(R.string.less_50));
-        });
+        lessTen.setOnClickListener(v -> goToFragmentKeyWords(getResources().getString(R.string.less_10)));
+        lessTwentyFive.setOnClickListener(v -> goToFragmentKeyWords(getResources().getString(R.string.less_25)));
+        lessFifty.setOnClickListener(v -> goToFragmentKeyWords(getResources().getString(R.string.less_50)));
     }
 
     /**

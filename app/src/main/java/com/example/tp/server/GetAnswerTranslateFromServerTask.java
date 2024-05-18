@@ -1,7 +1,5 @@
 package com.example.tp.server;
 
-import android.util.Log;
-
 import com.example.tp.Constants;
 
 import java.io.BufferedReader;

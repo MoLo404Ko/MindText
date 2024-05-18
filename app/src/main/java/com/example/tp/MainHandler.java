@@ -413,17 +413,14 @@ public class MainHandler extends Fragment {
 
                 String answer;
                 answer = ((FragmentBtnEmotions)fragment).requestToServer(message);
-                answer = ((FragmentBtnEmotions)fragment).clearAnswer(answer);
 
                 if (!answer.isEmpty()) {
                     handler.post(() -> {
                         ((FragmentBtnEmotions)fragment).controlUiComponents(false);
                     });
 
-                    String finalAnswer = answer;
-
                     handler.post(() -> {
-                        addMessage.addMessage(finalAnswer, null, "", false);
+                        addMessage.addMessage(answer, null, "", false);
                         addMessage.addMessage(getString(R.string.done), new FragmentBtnDoneText(),
                                 "fragmentBtnDoneText", false);
                         ((FragmentBtnEmotions) fragment).controlUiComponents(true);

@@ -31,7 +31,6 @@ public class GetAnswerFromFindObjectsServerTask implements Callable<String> {
         connection.setChunkedStreamingMode(8096);
         connection.setRequestProperty("Accept", "text/html");
 
-        // todo
         String postText = "text=" + text + "&object=" + object;
 
         byte[] byteData = postText.getBytes(StandardCharsets.UTF_8);
