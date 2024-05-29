@@ -46,8 +46,8 @@
 
     <string name="under_length">Выберите сколько предложений должно быть в тексте</string>
     <string name="less_10">До 10</string>
-    <string name="less_25">До 25</string>
-    <string name="less_50">До 50</string>
+    <string name="less_20">До 20</string>
+    <string name="less_30">До 30</string>
 
     <string name="key_words">Ключевые слова</string>
     <string name="under_key_words">Введите ключевые слова которые должны быть в тексте. В качестве разделителя используйте пробел</string>

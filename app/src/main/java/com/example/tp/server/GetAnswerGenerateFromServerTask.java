@@ -15,9 +15,11 @@ import java.util.concurrent.Callable;
 
 public class GetAnswerGenerateFromServerTask implements Callable<String> {
     private String promptText;
+    private int length;
 
-    public GetAnswerGenerateFromServerTask(String promptText) {
+    public GetAnswerGenerateFromServerTask(String promptText, int length) {
         this.promptText = promptText;
+        this.length = length;
     }
 
     /**
@@ -34,7 +36,7 @@ public class GetAnswerGenerateFromServerTask implements Callable<String> {
         connection.setChunkedStreamingMode(8096);
         connection.setRequestProperty("Accept", "text/html");
 
-        String postText = "data=" + promptText;
+        String postText = "data=" + promptText + "&length=" + length;
 
         byte[] byteData = postText.getBytes(StandardCharsets.UTF_8);
 

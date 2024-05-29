@@ -70,12 +70,12 @@ public class FragmentBtnKeyWords extends ClassWorkingWithNN {
 
         assert args != null;
         String promptText = args.getString("Article");
-        promptText += " " + args.getString("Length");
+        int length = args.getInt("Length");
         promptText += " " + keyWords;
 
         ExecutorService es = Executors.newSingleThreadExecutor();
 
-        Future<String> future = es.submit(new GetAnswerGenerateFromServerTask(promptText));
+        Future<String> future = es.submit(new GetAnswerGenerateFromServerTask(promptText, length));
         es.shutdown();
 
         try {
