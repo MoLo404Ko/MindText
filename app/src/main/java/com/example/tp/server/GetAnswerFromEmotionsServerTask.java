@@ -12,6 +12,7 @@ public class GetAnswerFromEmotionsServerTask implements Callable<String> {
 
     @Override
     public String call() throws Exception {
-        return GigaChatModelClass.getAnswerFromGigaChat("Какой эмоцинальный окрас у текста: " + text);
+        return GigaChatModelClass.getAnswerFromGigaChat("Какой эмоцинальный окрас у текста. " +
+                "Выбери из: радостный, грустный, депрессивный, воодушевленный: " + text);
     }
 }

@@ -45,8 +45,9 @@ public class GetAnswerFromFindObjectsServerTask implements Callable<String> {
         StringBuilder response = new StringBuilder();
         String responseLine;
 
+
         while ((responseLine = br.readLine()) != null)
-            response.append(responseLine.trim());
+            response.append(responseLine);
 
         outputStream.close();
         br.close();
